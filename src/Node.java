@@ -1,6 +1,8 @@
+import java.util.*;
+
 /********************Starter Code
  * 
- * This represents the solution for search algorithms (path_found, path, path_string, path_cost, n_explored)
+ * This represents the Node for search algorithms (state, parent_node, path_cost, depth)
  *
  */
 
@@ -37,6 +39,24 @@ public class Node {
 	}
 
 	public double getCost(Coord parent_node_state, Coord child_state) {
-		return 0.0;
+		ArrayList<Integer> pList = getDistanceList(parent_node_state);
+		ArrayList<Integer> cList = getDistanceList(child_state);
+		int a = cList.get(0) - pList.get(0);
+		int b = cList.get(1) - pList.get(1);
+		int c = cList.get(2) - pList.get(2);
+		return Math.abs(a) + Math.abs(b) + Math.abs(c);
 	}
+
+	public ArrayList<Integer> getDistanceList(Coord state) {
+		ArrayList<Integer> list = new ArrayList<Integer>();
+		int dir = (state.getC() + state.getR()) % 2 == 0 ? 0 : 1;
+		int a = -state.getR();
+		int b = (state.getR() + state.getC() - dir) / 2;
+		int c = (state.getR() + state.getC() - dir) / 2 - state.getR() + dir;
+		list.add(a);
+		list.add(b);
+		list.add(c);
+		return list;
+	}
+
 }

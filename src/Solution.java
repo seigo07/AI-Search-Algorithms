@@ -1,6 +1,6 @@
 /********************Starter Code
  * 
- * This represents the solution for search algorithms (path_found, path, path_string, path_cost, n_explored)
+ * This represents the Solution for search algorithms (path_found, path, path_string, path_cost, n_explored)
  *
  */
 
