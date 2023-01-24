@@ -13,6 +13,8 @@
 
 public class A1main {
 
+	static Solution s;
+
 	public static void main(String[] args) {
 		//Example: java A1main BFS JCONF03
 
@@ -22,8 +24,6 @@ public class A1main {
 		 * and run search algorithm
 		 *
 		 */
-
-		Solution s;
 
 		Conf conf = Conf.valueOf(args[1]);
 
@@ -36,7 +36,7 @@ public class A1main {
 		System.out.println();
 
 		//run your search algorithm 
-		s = runSearch(args[0],conf.getMap(),conf.getS(),conf.getG());
+		runSearch(args[0],conf.getMap(),conf.getS(),conf.getG());
 
 		/*
 		 * The system must print the following information from your search methods
@@ -130,37 +130,37 @@ public class A1main {
 
 	}
 
-	private static Solution runSearch(String algo, Map map, Coord start, Coord goal) {
+	private static void runSearch(String algo, Map map, Coord start, Coord goal) {
 		switch(algo) {
 		case "BFS": //run BFS
-			return BFS(map, start, goal);
+			BFS(map, start, goal);
+			break;
 		case "DFS": //run DFS
-			return DFS(map, start, goal);
+			DFS(map, start, goal);
+			break;
 		case "BestF": //run BestF
-			return BFS(map, start, goal);
+			break;
 		case "AStar": //run AStar
-			return BFS(map, start, goal);
-		default:
-			return BFS(map, start, goal);
+			break;
 		}
 	}
 
-	public static Solution BFS(Map map, Coord start, Coord goal) {
+	public static void BFS(Map map, Coord initial_state, Coord goal) {
 		boolean path_found=true;
 		String path="(1,1)(1,2)(1,3)(1,4)(1,5)(2,5)(2,4)(3,4)";
 		String path_string = "Right Right Right Right Down Left Down";
 		double path_cost=7.0;
 		int n_explored=24;
-		return new Solution(path_found, path, path_string, path_cost, n_explored);
+		s = new Solution(path_found, path, path_string, path_cost, n_explored);
 	}
 
-	public static Solution DFS(Map map, Coord start, Coord goal) {
+	public static void DFS(Map map, Coord start, Coord goal) {
 		boolean path_found=true;
 		String path="(1,1)(1,2)(1,3)(1,4)(1,5)(2,5)(2,4)(3,4)";
 		String path_string = "Right Right Right Right Down Left Down";
 		double path_cost=7.0;
 		int n_explored=24;
-		return new Solution(path_found, path, path_string, path_cost, n_explored);
+		s = new Solution(path_found, path, path_string, path_cost, n_explored);
 	}
 
 	private static void printMap(Map m, Coord init, Coord goal) {
