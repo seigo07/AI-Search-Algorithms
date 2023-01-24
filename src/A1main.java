@@ -23,13 +23,10 @@ public class A1main {
 		 *
 		 */
 
+		Solution s;
 
 		Conf conf = Conf.valueOf(args[1]);
 
-		
-		 //Uncomment here for debugging only 
-
-		/*
 		System.out.println("Configuration:"+args[1]);
 		System.out.println("Map:");
 		printMap(conf.getMap(), conf.getS(), conf.getG());
@@ -37,10 +34,9 @@ public class A1main {
 		System.out.println("Destination port: Goal (r_g,c_g): "+conf.getG());
 		System.out.println("Search algorithm: "+args[0]);
 		System.out.println();
-		*/
 
 		//run your search algorithm 
-		runSearch(args[0],conf.getMap(),conf.getS(),conf.getG());
+		s = runSearch(args[0],conf.getMap(),conf.getS(),conf.getG());
 
 		/*
 		 * The system must print the following information from your search methods
@@ -116,38 +112,56 @@ public class A1main {
 		 * 2) The final three lines must be the path, the path in string, path cost, and number of nodes visited/explored, in this order
 		 */
 
+//		boolean path_found=true;
+//		String path="(1,1)(1,2)(1,3)(1,4)(1,5)(2,5)(2,4)(3,4)";
+//		String path_string = "Right Right Right Right Down Left Down";
+//		double path_cost=7.0;
+//		int n_explored=24;
+
+		if(s.getPathFound()) {
+			System.out.println(s.getPath());
+			System.out.println(s.getPathString());
+			System.out.println(s.getPathCost());
+		}else {
+			System.out.println("fail");
+		}
+
+		System.out.println(s.getNExplored());
+
+	}
+
+	private static Solution runSearch(String algo, Map map, Coord start, Coord goal) {
+		switch(algo) {
+		case "BFS": //run BFS
+			return BFS(map, start, goal);
+		case "DFS": //run DFS
+			return DFS(map, start, goal);
+		case "BestF": //run BestF
+			return BFS(map, start, goal);
+		case "AStar": //run AStar
+			return BFS(map, start, goal);
+		default:
+			return BFS(map, start, goal);
+		}
+	}
+
+	public static Solution BFS(Map map, Coord start, Coord goal) {
 		boolean path_found=true;
 		String path="(1,1)(1,2)(1,3)(1,4)(1,5)(2,5)(2,4)(3,4)";
 		String path_string = "Right Right Right Right Down Left Down";
 		double path_cost=7.0;
 		int n_explored=24;
-
-		if(path_found) {
-			System.out.println(path);
-			System.out.println(path_string);
-			System.out.println(path_cost);
-		}else {
-			System.out.println("fail");
-		}
-
-		System.out.println(n_explored);
-
+		return new Solution(path_found, path, path_string, path_cost, n_explored);
 	}
 
-	private static void runSearch(String algo, Map map, Coord start, Coord goal) {
-		switch(algo) {
-		case "BFS": //run BFS
-			break;
-		case "DFS": //run DFS
-			break;  
-		case "BestF": //run BestF
-			break;
-		case "AStar": //run AStar
-			break;
-		}
-
+	public static Solution DFS(Map map, Coord start, Coord goal) {
+		boolean path_found=true;
+		String path="(1,1)(1,2)(1,3)(1,4)(1,5)(2,5)(2,4)(3,4)";
+		String path_string = "Right Right Right Right Down Left Down";
+		double path_cost=7.0;
+		int n_explored=24;
+		return new Solution(path_found, path, path_string, path_cost, n_explored);
 	}
-
 
 	private static void printMap(Map m, Coord init, Coord goal) {
 
