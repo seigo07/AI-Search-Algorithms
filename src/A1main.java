@@ -149,15 +149,15 @@ public class A1main {
 
 	public static void BFS(Map problem, Coord initial_state, Coord goal) {
 
-		Deque<Node> frontier = new ArrayDeque<>();
-		Deque<Node> explored = new ArrayDeque<>();
 		Node initialNode = new Node(null, initial_state);
+		Deque<Node> frontier = new ArrayDeque<>();
 		frontier.add(initialNode);
+		Deque<Node> explored = new ArrayDeque<>();
 
 		// TODO delete
-		Coord coord = new Coord(1,0);
-		Node node = new Node(null, coord);
-		expand(node, problem, frontier, explored);
+//		Coord coord = new Coord(1,1);
+//		Node node = new Node(null, coord);
+//		expand(node, problem, frontier, explored);
 
 		for (;;) {
 			if (frontier.isEmpty()) {
@@ -166,7 +166,16 @@ public class A1main {
 			}
 			Node nd = frontier.removeFirst();
 			explored.add(nd);
-			if (nd.equals(goal)) {
+			// TODO delete
+			System.out.print("explored\n");
+			for (Node e : explored) {
+				System.out.print(e.getState().getC() + "-" + e.getState().getR() + "\n");
+			}
+			if (goal.equals(nd.getState())) {
+				// TODO delete
+				System.out.print("goal\n");
+				System.out.print(nd.getState()+"\n");
+
 				boolean path_found=true;
 				String path="(1,1)(1,2)(1,3)(1,4)(1,5)(2,5)(2,4)(3,4)";
 				String path_string = "Right Right Right Right Down Left Down";
@@ -176,6 +185,11 @@ public class A1main {
 				return;
 			} else {
 				frontier.addAll(expand(nd, problem, frontier, explored));
+				// TODO delete
+				System.out.print("frontier\n");
+				for (Node f : frontier) {
+					System.out.print(f.getState().getC() + "-" + f.getState().getR() + "\n");
+				}
 			}
 		}
 	}
@@ -192,28 +206,39 @@ public class A1main {
 	public static ArrayList<Node> expand(Node node, Map problem, Deque<Node> frontier, Deque<Node> explored) {
 		ArrayList<Coord> next_states = successor(node.getState(), problem);
 		ArrayList<Node> successors = new ArrayList<Node>();
-		for (int i = 0; i < next_states.size(); i++) {
-			Coord state = next_states.get(i);
-			if (!state.equals(explored) || !state.equals(frontier)) {
-				Node nd = new Node(node, next_states.get(i));
+		for (Coord state : next_states) {
+			if (!checkExistenceOfState(state, explored) && !checkExistenceOfState(state, frontier)) {
+				Node nd = new Node(node, state);
 				successors.add(nd);
 			}
 		}
+		// TODO delete
+//		System.out.print("successors\n");
+//		for (Node n : successors) {
+//			System.out.print(n.getState().getC() + "-" + n.getState().getR() + "\n");
+//		}
 		return successors;
+	}
+
+	// Check state is not contained in a node of explored or frontier
+	public static boolean checkExistenceOfState(Coord state, Deque<Node> deque) {
+		for (Node n : deque) {
+			if (state.equals(n.getState())) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public static ArrayList<Coord> successor(Coord node_state, Map problem) {
 
-		// Check direction of triangle
 		int dir = (node_state.getC() + node_state.getR()) % 2 == 0 ? 0 : 1;
 		ArrayList<Coord> next_states = getNextStates(problem, node_state, dir);
-
 		// TODO delete
-		System.out.print("next_states\n");
-		for (Coord e : next_states) {
-			System.out.print(e.getC() + "-" + e.getR() + "\n");
-		}
-
+//		System.out.print("next_states\n");
+//		for (Coord e : next_states) {
+//			System.out.print(e.getC() + "-" + e.getR() + "\n");
+//		}
 		return next_states;
 	}
 
@@ -236,9 +261,6 @@ public class A1main {
 				int fi = node_state.getC();
 				int si = node_state.getR() + 1;
 				if (checkNextValueIsValid(problem, si, fi)) {
-					System.out.print("hoge\n");
-					System.out.print(fi + "\n");
-					System.out.print(si + "\n");
 					Coord coord = new Coord(fi, si);
 					next_states.add(coord);
 				}
@@ -281,10 +303,6 @@ public class A1main {
 	// Check if index + 1 < upper limit of index
 	public static boolean checkRightOrBottomNodeIsValid(int index, int length) {
 		return index + 1 <= length - 1;
-	}
-
-	public static boolean goalTest(Coord nd, Coord goal) {
-		return nd.equals(goal);
 	}
 
 	private static void printMap(Map m, Coord init, Coord goal) {
