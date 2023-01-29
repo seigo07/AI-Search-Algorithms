@@ -11,6 +11,7 @@
 public class Coord {
 	private int r;//row
 	private int c;//column
+	private String direction = "";
 
 	public Coord(int row,int column) {
 		r=row;
@@ -26,6 +27,13 @@ public class Coord {
 	}
 	public int getC() {
 		return c;
+	}
+	public String getDirection() {
+		return direction;
+	}
+
+	public void setDirection(String direction) {
+		this.direction = direction;
 	}
 
 	@Override

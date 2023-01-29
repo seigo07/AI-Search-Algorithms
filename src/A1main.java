@@ -169,7 +169,7 @@ public class A1main {
 			// TODO delete
 			System.out.print("explored\n");
 			for (Node e : explored) {
-				System.out.print(e.getState().getC() + "-" + e.getState().getR() + "\n");
+				System.out.print(e.getState().getR() + "-" + e.getState().getC() + "\n");
 			}
 			if (goal.equals(nd.getState())) {
 				// TODO delete
@@ -177,10 +177,15 @@ public class A1main {
 				System.out.print(nd.getState()+"\n");
 
 				boolean path_found=true;
-				String path="(1,1)(1,2)(1,3)(1,4)(1,5)(2,5)(2,4)(3,4)";
-				String path_string = "Right Right Right Right Down Left Down";
-				double path_cost=7.0;
-				int n_explored=24;
+				String path = "";
+				String path_string = "";
+				for (Node e : explored) {
+					path += "("+e.getState().getR()+","+e.getState().getC()+")";
+						path_string += e.getState().getDirection() + " ";
+				}
+				double path_cost = nd.getPathCost();
+				int n_explored = explored.size();
+
 				s = new Solution(path_found, path, path_string, path_cost, n_explored);
 				return;
 			} else {
@@ -188,7 +193,7 @@ public class A1main {
 				// TODO delete
 				System.out.print("frontier\n");
 				for (Node f : frontier) {
-					System.out.print(f.getState().getC() + "-" + f.getState().getR() + "\n");
+					System.out.print(f.getState().getR() + "-" + f.getState().getC() + "\n");
 				}
 			}
 		}
@@ -247,10 +252,11 @@ public class A1main {
 		ArrayList<Coord> next_states = new ArrayList<Coord>();
 		// Add right node
 		if (checkRightOrBottomNodeIsValid(node_state.getC(), problem.getMap().length)) {
-			int fi = node_state.getC() + 1;
-			int si = node_state.getR();
-			if (checkNextValueIsValid(problem, si, fi)) {
+			int fi = node_state.getR();
+			int si = node_state.getC() + 1;
+			if (checkNextValueIsValid(problem, fi, si)) {
 				Coord coord = new Coord(fi, si);
+				coord.setDirection("Right");
 				next_states.add(coord);
 			}
 		}
@@ -258,20 +264,22 @@ public class A1main {
 		if (dir == 0) {
 			// Add bottom node
 			if (checkRightOrBottomNodeIsValid(node_state.getR(), problem.getMap().length)) {
-				int fi = node_state.getC();
-				int si = node_state.getR() + 1;
-				if (checkNextValueIsValid(problem, si, fi)) {
+				int fi = node_state.getR() + 1;
+				int si = node_state.getC();
+				if (checkNextValueIsValid(problem, fi, si)) {
 					Coord coord = new Coord(fi, si);
+					coord.setDirection("Down");
 					next_states.add(coord);
 				}
 			}
 		}
 		// Add left node
 		if (checkLeftOrTopNodeIsValid(node_state.getC())) {
-			int fi = node_state.getC() - 1;
-			int si = node_state.getR();
-			if (checkNextValueIsValid(problem, si, fi)) {
+			int fi = node_state.getR();
+			int si = node_state.getC() - 1;
+			if (checkNextValueIsValid(problem, fi, si)) {
 				Coord coord = new Coord(fi, si);
+				coord.setDirection("Left");
 				next_states.add(coord);
 			}
 		}
@@ -279,10 +287,11 @@ public class A1main {
 		if (dir == 1) {
 			// Add top node
 			if (checkLeftOrTopNodeIsValid(node_state.getR())) {
-				int fi = node_state.getC();
-				int si = node_state.getR() - 1;
-				if (checkNextValueIsValid(problem, si, fi)) {
+				int fi = node_state.getR() - 1;
+				int si = node_state.getC();
+				if (checkNextValueIsValid(problem, fi, si)) {
 					Coord coord = new Coord(fi, si);
+					coord.setDirection("Up");
 					next_states.add(coord);
 				}
 			}
