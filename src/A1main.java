@@ -1,3 +1,5 @@
+import java.util.*;
+
 /********************Starter Code
  * 
  * This class contains some examples on how to handle the required inputs and outputs 
@@ -145,13 +147,37 @@ public class A1main {
 		}
 	}
 
-	public static void BFS(Map map, Coord initial_state, Coord goal) {
-		boolean path_found=true;
-		String path="(1,1)(1,2)(1,3)(1,4)(1,5)(2,5)(2,4)(3,4)";
-		String path_string = "Right Right Right Right Down Left Down";
-		double path_cost=7.0;
-		int n_explored=24;
-		s = new Solution(path_found, path, path_string, path_cost, n_explored);
+	public static void BFS(Map problem, Coord initial_state, Coord goal) {
+
+		Deque<Node> frontier = new ArrayDeque<>();
+		Deque<Node> explored = new ArrayDeque<>();
+		Node initialNode = new Node(null, initial_state);
+		frontier.add(initialNode);
+
+		// TODO delete
+		Coord coord = new Coord(1,0);
+		Node node = new Node(null, coord);
+		expand(node, problem, frontier, explored);
+
+		for (;;) {
+			if (frontier.isEmpty()) {
+				s = new Solution(false, "", "", 0, 0);
+				return;
+			}
+			Node nd = frontier.removeFirst();
+			explored.add(nd);
+			if (nd.equals(goal)) {
+				boolean path_found=true;
+				String path="(1,1)(1,2)(1,3)(1,4)(1,5)(2,5)(2,4)(3,4)";
+				String path_string = "Right Right Right Right Down Left Down";
+				double path_cost=7.0;
+				int n_explored=24;
+				s = new Solution(path_found, path, path_string, path_cost, n_explored);
+				return;
+			} else {
+				frontier.addAll(expand(nd, problem, frontier, explored));
+			}
+		}
 	}
 
 	public static void DFS(Map map, Coord start, Coord goal) {
@@ -161,6 +187,104 @@ public class A1main {
 		double path_cost=7.0;
 		int n_explored=24;
 		s = new Solution(path_found, path, path_string, path_cost, n_explored);
+	}
+
+	public static ArrayList<Node> expand(Node node, Map problem, Deque<Node> frontier, Deque<Node> explored) {
+		ArrayList<Coord> next_states = successor(node.getState(), problem);
+		ArrayList<Node> successors = new ArrayList<Node>();
+		for (int i = 0; i < next_states.size(); i++) {
+			Coord state = next_states.get(i);
+			if (!state.equals(explored) || !state.equals(frontier)) {
+				Node nd = new Node(node, next_states.get(i));
+				successors.add(nd);
+			}
+		}
+		return successors;
+	}
+
+	public static ArrayList<Coord> successor(Coord node_state, Map problem) {
+
+		// Check direction of triangle
+		int dir = (node_state.getC() + node_state.getR()) % 2 == 0 ? 0 : 1;
+		ArrayList<Coord> next_states = getNextStates(problem, node_state, dir);
+
+		// TODO delete
+		System.out.print("next_states\n");
+		for (Coord e : next_states) {
+			System.out.print(e.getC() + "-" + e.getR() + "\n");
+		}
+
+		return next_states;
+	}
+
+	public static ArrayList<Coord> getNextStates(Map problem, Coord node_state, int dir) {
+
+		ArrayList<Coord> next_states = new ArrayList<Coord>();
+		// Add right node
+		if (checkRightOrBottomNodeIsValid(node_state.getC(), problem.getMap().length)) {
+			int fi = node_state.getC() + 1;
+			int si = node_state.getR();
+			if (checkNextValueIsValid(problem, si, fi)) {
+				Coord coord = new Coord(fi, si);
+				next_states.add(coord);
+			}
+		}
+		// Upper case
+		if (dir == 0) {
+			// Add bottom node
+			if (checkRightOrBottomNodeIsValid(node_state.getR(), problem.getMap().length)) {
+				int fi = node_state.getC();
+				int si = node_state.getR() + 1;
+				if (checkNextValueIsValid(problem, si, fi)) {
+					System.out.print("hoge\n");
+					System.out.print(fi + "\n");
+					System.out.print(si + "\n");
+					Coord coord = new Coord(fi, si);
+					next_states.add(coord);
+				}
+			}
+		}
+		// Add left node
+		if (checkLeftOrTopNodeIsValid(node_state.getC())) {
+			int fi = node_state.getC() - 1;
+			int si = node_state.getR();
+			if (checkNextValueIsValid(problem, si, fi)) {
+				Coord coord = new Coord(fi, si);
+				next_states.add(coord);
+			}
+		}
+		// Upper case
+		if (dir == 1) {
+			// Add top node
+			if (checkLeftOrTopNodeIsValid(node_state.getR())) {
+				int fi = node_state.getC();
+				int si = node_state.getR() - 1;
+				if (checkNextValueIsValid(problem, si, fi)) {
+					Coord coord = new Coord(fi, si);
+					next_states.add(coord);
+				}
+			}
+		}
+		return next_states;
+	}
+
+	// Check if the next state is valid
+	public static boolean checkNextValueIsValid(Map problem, int fi, int si) {
+		return problem.getMap()[fi][si] != 1;
+	}
+
+	// Check if index - 1 < 0
+	public static boolean checkLeftOrTopNodeIsValid(int index) {
+		return index - 1 >= 0;
+	}
+
+	// Check if index + 1 < upper limit of index
+	public static boolean checkRightOrBottomNodeIsValid(int index, int length) {
+		return index + 1 <= length - 1;
+	}
+
+	public static boolean goalTest(Coord nd, Coord goal) {
+		return nd.equals(goal);
 	}
 
 	private static void printMap(Map m, Coord init, Coord goal) {

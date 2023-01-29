@@ -16,9 +16,11 @@ public class Node {
 	public Node(Node parent_node, Coord child_state) {
 		this.state = child_state;
 		this.parent_node = parent_node;
-		this.action();
-		this.path_cost = parent_node.path_cost + getCost(parent_node.state, child_state);
-		this.depth = parent_node.depth + 1;
+		if (this.parent_node != null) {
+			this.action();
+			this.path_cost = parent_node.path_cost + getCost(parent_node.state, child_state);
+			this.depth = parent_node.depth + 1;
+		}
 	}
 
 	public Coord getState() {
