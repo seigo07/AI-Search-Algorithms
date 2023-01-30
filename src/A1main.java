@@ -17,6 +17,10 @@ public class A1main {
 
 	static Solution s;
 
+	public enum SearchAlgorithm {
+		BFS, DFS
+	}
+
 	public static void main(String[] args) {
 		//Example: java A1main BFS JCONF03
 
@@ -135,10 +139,10 @@ public class A1main {
 	private static void runSearch(String algo, Map map, Coord start, Coord goal) {
 		switch(algo) {
 		case "BFS": //run BFS
-			BFS(map, start, goal);
+			treeSearch(map, start, goal, SearchAlgorithm.BFS);
 			break;
 		case "DFS": //run DFS
-			DFS(map, start, goal);
+			treeSearch(map, start, goal, SearchAlgorithm.DFS);
 			break;
 		case "BestF": //run BestF
 			break;
@@ -147,11 +151,18 @@ public class A1main {
 		}
 	}
 
-	public static void BFS(Map problem, Coord initial_state, Coord goal) {
+	public static void treeSearch(Map problem, Coord initial_state, Coord goal, SearchAlgorithm alg) {
 
 		Node initialNode = new Node(null, initial_state);
 		Deque<Node> frontier = new ArrayDeque<>();
-		frontier.add(initialNode);
+		switch (alg) {
+			case BFS:
+				frontier.addLast(initialNode);
+				break;
+			case DFS:
+				frontier.addFirst(initialNode);
+				break;
+		}
 		Deque<Node> explored = new ArrayDeque<>();
 
 		// TODO delete
@@ -189,7 +200,16 @@ public class A1main {
 				s = new Solution(path_found, path, path_string, path_cost, n_explored);
 				return;
 			} else {
-				frontier.addAll(expand(nd, problem, frontier, explored));
+				for (Node n : expand(nd, problem, frontier, explored)) {
+					switch (alg) {
+						case BFS:
+							frontier.addLast(n);
+							break;
+						case DFS:
+							frontier.addFirst(n);
+							break;
+					}
+				}
 				// TODO delete
 				System.out.print("frontier\n");
 				for (Node f : frontier) {
@@ -197,15 +217,6 @@ public class A1main {
 				}
 			}
 		}
-	}
-
-	public static void DFS(Map map, Coord start, Coord goal) {
-		boolean path_found=true;
-		String path="(1,1)(1,2)(1,3)(1,4)(1,5)(2,5)(2,4)(3,4)";
-		String path_string = "Right Right Right Right Down Left Down";
-		double path_cost=7.0;
-		int n_explored=24;
-		s = new Solution(path_found, path, path_string, path_cost, n_explored);
 	}
 
 	public static ArrayList<Node> expand(Node node, Map problem, Deque<Node> frontier, Deque<Node> explored) {
