@@ -18,7 +18,7 @@ public class Node {
 		this.parent_node = parent_node;
 		if (this.parent_node != null) {
 //			this.action();
-			child_state = parent_node.getState();
+//			child_state = parent_node.getState();
 			this.path_cost = parent_node.path_cost + getCost(parent_node.state, child_state);
 			this.depth = parent_node.depth + 1;
 		}

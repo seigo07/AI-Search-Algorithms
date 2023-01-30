@@ -187,12 +187,26 @@ public class A1main {
 				System.out.print("goal\n");
 				System.out.print(nd.getState()+"\n");
 
+				ArrayList<Node> search_nodes = new ArrayList<Node>();
+				Node search_node = nd;
+				search_nodes.add(nd);
+				for (;;) {
+					if (search_node.getParentNode() == null) {
+						break;
+					}
+					search_nodes.add(search_node.getParentNode());
+					search_node = search_node.getParentNode();
+				}
+
 				boolean path_found=true;
 				String path = "";
 				String path_string = "";
-				for (Node e : explored) {
+				Collections.reverse(search_nodes);
+				for (Node e : search_nodes) {
 					path += "("+e.getState().getR()+","+e.getState().getC()+")";
+					if (!e.getState().getDirection().isEmpty()) {
 						path_string += e.getState().getDirection() + " ";
+					}
 				}
 				double path_cost = nd.getPathCost();
 				int n_explored = explored.size();
