@@ -65,7 +65,7 @@ public class A1main {
 			frontier_string="[(0,0)]";
 
 
-			System.out.println(frontier_string);
+//			System.out.println(frontier_string);
 
 			//extract (0,0)
 			//insert successors in the frontier (0,1),(1,0) , then print the frontier,  and repeat for all steps until a path is found or not 
@@ -95,7 +95,7 @@ public class A1main {
 			"[(4,2),(4,0),(3,4),(4,3)]\n" +
 			"[(4,0),(3,4),(4,3),(5,2)]\n" +
 			"[(3,4),(4,3),(5,2),(5,0)]\n";
-			System.out.println(frontier_string);
+//			System.out.println(frontier_string);
 
 
 		}else {
@@ -111,23 +111,9 @@ public class A1main {
 			"Down Left Down Right Right Right Right\n" +
 			"7.0\n" +
 			"14\n";
-			System.out.println(frontier_string);
+//			System.out.println(frontier_string);
 
 		}
-
-		/*
-		 * 2) The final three lines must be the path, the path in string, path cost, and number of nodes visited/explored, in this order
-		 */
-
-		if(s.getPathFound()) {
-			System.out.println(s.getPath());
-			System.out.println(s.getPathString());
-			System.out.println(s.getPathCost());
-		}else {
-			System.out.println("fail");
-		}
-
-		System.out.println(s.getNExplored());
 
 	}
 
@@ -166,8 +152,12 @@ public class A1main {
 		Deque<Node> explored = new ArrayDeque<>();
 
 		for (;;) {
+			// Output the coordinate of frontier
+			outputFrontier(frontier);
 			if (frontier.isEmpty()) {
-				s = new Solution(false, "", "", 0, explored.size());
+				// Output result in case of failure
+				System.out.println("fail");
+				System.out.println(explored.size());
 				return;
 			}
 			Node nd;
@@ -181,31 +171,8 @@ public class A1main {
 			}
 			explored.add(nd);
 			if (goal.equals(nd.getState())) {
-				ArrayList<Node> search_nodes = new ArrayList<Node>();
-				Node search_node = nd;
-				search_nodes.add(nd);
-				for (;;) {
-					if (search_node.getParentNode() == null) {
-						break;
-					}
-					search_nodes.add(search_node.getParentNode());
-					search_node = search_node.getParentNode();
-				}
-
-				boolean path_found=true;
-				String path = "";
-				String path_string = "";
-				Collections.reverse(search_nodes);
-				for (Node e : search_nodes) {
-					path += "("+e.getState().getR()+","+e.getState().getC()+")";
-					if (!e.getState().getDirection().isEmpty()) {
-						path_string += e.getState().getDirection() + " ";
-					}
-				}
-				double path_cost = nd.getPathCost();
-				int n_explored = explored.size();
-
-				s = new Solution(path_found, path, path_string, path_cost, n_explored);
+				// Output result in case of success
+				outputResult(nd, explored);
 				return;
 			} else {
 				for (Node n : expand(nd, problem, frontier, explored, goal, alg)) {
@@ -224,17 +191,58 @@ public class A1main {
 		}
 	}
 
+	public static void outputFrontier(Deque<Node> frontier) {
+		if (!frontier.isEmpty()) {
+			String frontierOutput = "";
+			frontierOutput += "[";
+			for (Node n : frontier) {
+				frontierOutput += "(" + n.getState().getR() + "," + n.getState().getC() + "),";
+			}
+			frontierOutput = frontierOutput.substring(0, frontierOutput.lastIndexOf(","));
+			frontierOutput += "]";
+			System.out.println(frontierOutput);
+		}
+	}
+
+	public static void outputResult(Node nd, Deque<Node> explored) {
+		ArrayList<Node> search_nodes = new ArrayList<Node>();
+		Node search_node = nd;
+		search_nodes.add(nd);
+		for (;;) {
+			if (search_node.getParentNode() == null) {
+				break;
+			}
+			search_nodes.add(search_node.getParentNode());
+			search_node = search_node.getParentNode();
+		}
+
+		String path = "";
+		String path_string = "";
+		Collections.reverse(search_nodes);
+		for (Node e : search_nodes) {
+			path += "("+e.getState().getR()+","+e.getState().getC()+")";
+			path_string += e.getState().getDirection() + " ";
+		}
+		path_string = path_string.trim();
+
+		// Output result in case of success
+		System.out.println(path);
+		System.out.println(path_string);
+		System.out.println(nd.getPathCost());
+		System.out.println(explored.size());
+	}
+
 	public static Node removeLowestF(Deque<Node> frontier) {
 		Node minN = frontier.getFirst();
 		for (Node n : frontier) {
 			// TODO delete
-			System.out.println(n.getState().getR() + "-" + n.getState().getC() + " f-cost = " + n.getFCost());
+//			System.out.println(n.getState().getR() + "-" + n.getState().getC() + " f-cost = " + n.getFCost());
 			if (n.getFCost() < minN.getFCost()) {
 				minN = n;
 			}
 		}
 		// TODO delete
-		System.out.println("lowest n = " + minN.getState().getR() + "-" + minN.getState().getC());
+//		System.out.println("lowest n = " + minN.getState().getR() + "-" + minN.getState().getC());
 		frontier.remove(minN);
 		return minN;
 	}
