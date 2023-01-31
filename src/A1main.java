@@ -81,7 +81,8 @@ public class A1main {
 
 		for (;;) {
 			// Output the coordinate of frontier
-			outputFrontier(frontier);
+			boolean isInformed = (alg == SearchAlgorithm.BestF || alg == SearchAlgorithm.AStar);
+			outputFrontier(frontier, isInformed);
 			if (frontier.isEmpty()) {
 				// Output result in case of failure
 				System.out.println("fail");
@@ -119,12 +120,14 @@ public class A1main {
 		}
 	}
 
-	public static void outputFrontier(Deque<Node> frontier) {
+	public static void outputFrontier(Deque<Node> frontier, boolean isInformed) {
 		if (!frontier.isEmpty()) {
 			String frontierOutput = "";
 			frontierOutput += "[";
 			for (Node n : frontier) {
-				frontierOutput += "(" + n.getState().getR() + "," + n.getState().getC() + "),";
+				frontierOutput += isInformed ?
+					"(" + n.getState().getR() + "," + n.getState().getC() + "):" + n.getFCost() + "," :
+					"(" + n.getState().getR() + "," + n.getState().getC() + "),";
 			}
 			frontierOutput = frontierOutput.substring(0, frontierOutput.lastIndexOf(","));
 			frontierOutput += "]";
