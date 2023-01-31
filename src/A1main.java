@@ -150,7 +150,7 @@ public class A1main {
 
 	public static void search(Map problem, Coord initial_state, Coord goal, SearchAlgorithm alg) {
 
-		Node initialNode = new Node(null, initial_state, null);
+		Node initialNode = new Node(null, initial_state, null, alg);
 		Deque<Node> frontier = new ArrayDeque<>();
 		switch (alg) {
 			case BFS:
@@ -243,20 +243,46 @@ public class A1main {
 		ArrayList<Coord> next_states = successor(node.getState(), problem);
 		ArrayList<Node> successors = new ArrayList<Node>();
 		for (Coord state : next_states) {
-			if (!checkExistenceOfState(state, explored) && !checkExistenceOfState(state, frontier)) {
-				Node nd;
-				switch (alg) {
-					case BestF, AStar:
-						nd = new Node(node, state, goal);
-						break;
-					default:
-						nd = new Node(node, state, null);
-						break;
-				}
-				successors.add(nd);
+			Node nd;
+			switch (alg) {
+				case BestF:
+					nd = new Node(node, state, goal, alg);
+					if (!checkExistenceOfState(nd.getState(), explored) && !checkExistenceOfState(nd.getState(), frontier)) {
+						successors.add(nd);
+					}
+					break;
+				case AStar:
+					nd = new Node(node, state, goal, alg);
+					if (!checkExistenceOfState(nd.getState(), explored) && !checkExistenceOfState(nd.getState(), frontier)) {
+						successors.add(nd);
+					} else if (checkExistenceOfState(nd.getState(), frontier)) {
+						frontier = replaceOldNodeWithNewOnes(nd, frontier);
+					}
+					break;
+				case BFS, DFS:
+					nd = new Node(node, state, null, alg);
+					if (!checkExistenceOfState(nd.getState(), explored) && !checkExistenceOfState(nd.getState(), frontier)) {
+						successors.add(nd);
+					}
+					break;
 			}
 		}
 		return successors;
+	}
+
+	// Check state is not contained in a node of explored or frontier and replace old node with new one.
+	public static Deque<Node> replaceOldNodeWithNewOnes(Node nd, Deque<Node> deque) {
+		Deque<Node> frontier = new ArrayDeque<>();
+		for (Node n : deque) {
+			if (nd.getState().equals(n.getState())) {
+				if (nd.getFCost() > n.getFCost()) {
+					frontier.addFirst(nd);
+				}
+			} else {
+				frontier.addFirst(n);
+			}
+		}
+		return frontier;
 	}
 
 	// Check state is not contained in a node of explored or frontier

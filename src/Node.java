@@ -14,7 +14,7 @@ public class Node {
 	private double f_cost;
 	private int depth;
 
-	public Node(Node parent_node, Coord child_state, Coord goal) {
+	public Node(Node parent_node, Coord child_state, Coord goal, A1main.SearchAlgorithm alg) {
 		this.state = child_state;
 		this.parent_node = parent_node;
 		if (this.parent_node != null) {
@@ -22,7 +22,14 @@ public class Node {
 //			child_state = parent_node.getState();
 			this.path_cost = parent_node.path_cost + getCost(parent_node.state, child_state);
 			if (goal != null) {
-				f_cost = getCost(this.state, goal);
+				switch (alg) {
+					case BestF:
+						f_cost = getCost(this.state, goal);
+						break;
+					case AStar:
+						f_cost = getCost(this.state, goal) + path_cost;
+						break;
+				}
 			}
 			this.depth = parent_node.depth + 1;
 		}
