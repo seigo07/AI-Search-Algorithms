@@ -42,77 +42,6 @@ public class A1main {
 
 		//run your search algorithm 
 		runSearch(args[0],conf.getMap(),conf.getS(),conf.getG());
-
-		/*
-		 * The system must print the following information from your search methods
-		 * All code below is for demonstration purposes, and can be removed
-		 */
-
-
-		/*
-		 * 1) Print the Frontier at each step before polling 
-		 */
-
-		boolean uninformed=true;
-		String frontier_string="";
-
-		if(uninformed) {
-
-			//starting point (1,1), 
-			//insert node in the frontier, then print the frontier:
-			frontier_string="[(0,0)]";
-
-
-//			System.out.println(frontier_string);
-
-			//extract (0,0)
-			//insert successors in the frontier (0,1),(1,0) , then print the frontier,  and repeat for all steps until a path is found or not 
-			
-			
-			frontier_string="[(1,1)]\n" +
-			"[(1,2),(2,1),(1,0)]\n" +
-			"[(2,1),(1,0),(1,3),(0,2)]\n" +
-			"[(1,0),(1,3),(0,2),(2,0)]\n" +
-			"[(1,3),(0,2),(2,0),(0,0)]\n" +
-			"[(0,2),(2,0),(0,0),(1,4)]\n" +
-			"[(2,0),(0,0),(1,4),(0,3),(0,1)]\n" +
-			"[(0,0),(1,4),(0,3),(0,1),(3,0)]\n" +
-			"[(1,4),(0,3),(0,1),(3,0)]\n" +
-			"[(0,3),(0,1),(3,0),(1,5),(0,4)]\n" +
-			"[(0,1),(3,0),(1,5),(0,4)]\n" +
-			"[(3,0),(1,5),(0,4)]\n" +
-			"[(1,5),(0,4),(3,1)]\n" +
-			"[(0,4),(3,1),(2,5)]\n" +
-			"[(3,1),(2,5),(0,5)]\n" +
-			"[(2,5),(0,5),(3,2),(4,1)]\n" +
-			"[(0,5),(3,2),(4,1),(2,4)]\n" +
-			"[(3,2),(4,1),(2,4)]\n" +
-			"[(4,1),(2,4),(3,3)]\n" +
-			"[(2,4),(3,3),(4,2),(4,0)]\n" +
-			"[(3,3),(4,2),(4,0),(3,4)]\n" +
-			"[(4,2),(4,0),(3,4),(4,3)]\n" +
-			"[(4,0),(3,4),(4,3),(5,2)]\n" +
-			"[(3,4),(4,3),(5,2),(5,0)]\n";
-//			System.out.println(frontier_string);
-
-
-		}else {
-			//for informed searches the nodes in the frontier must also include the f-cost 
-			//for example 
-
-
-			frontier_string="[(1,1):5.0]\n" + 
-			"[(1,2):5.0,(2,1):5.0,(1,0):7.0]\n" + 
-			"[(1,3):5.0,(2,1):5.0,(1,0):7.0,(0,2):7.0]\n" +
-			"...\n" +
-			"(1,1)(2,1)(2,0)(3,0)(3,1)(3,2)(3,3)(3,4)\n" +
-			"Down Left Down Right Right Right Right\n" +
-			"7.0\n" +
-			"14\n";
-//			System.out.println(frontier_string);
-
-		}
-
 	}
 
 	private static void runSearch(String algo, Map map, Coord start, Coord goal) {
@@ -136,6 +65,7 @@ public class A1main {
 
 		Node initialNode = new Node(null, initial_state, null, alg);
 		Deque<Node> frontier = new ArrayDeque<>();
+
 		switch (alg) {
 			case BFS:
 				frontier.addLast(initialNode);
@@ -203,9 +133,11 @@ public class A1main {
 	}
 
 	public static void outputResult(Node nd, Deque<Node> explored) {
+
 		ArrayList<Node> search_nodes = new ArrayList<Node>();
 		Node search_node = nd;
 		search_nodes.add(nd);
+
 		for (;;) {
 			if (search_node.getParentNode() == null) {
 				break;
@@ -231,23 +163,23 @@ public class A1main {
 	}
 
 	public static Node removeLowestF(Deque<Node> frontier) {
+
 		Node minN = frontier.getFirst();
+
 		for (Node n : frontier) {
-			// TODO delete
-//			System.out.println(n.getState().getR() + "-" + n.getState().getC() + " f-cost = " + n.getFCost());
 			if (n.getFCost() < minN.getFCost()) {
 				minN = n;
 			}
 		}
-		// TODO delete
-//		System.out.println("lowest n = " + minN.getState().getR() + "-" + minN.getState().getC());
 		frontier.remove(minN);
 		return minN;
 	}
 
 	public static ArrayList<Node> expand(Node node, Map problem, Deque<Node> frontier, Deque<Node> explored, Coord goal, SearchAlgorithm alg) {
+
 		ArrayList<Coord> next_states = successor(node.getState(), problem);
 		ArrayList<Node> successors = new ArrayList<Node>();
+
 		for (Coord state : next_states) {
 			Node nd;
 			switch (alg) {
@@ -278,7 +210,9 @@ public class A1main {
 
 	// Check state is not contained in a node of explored or frontier and replace old node with new one.
 	public static Deque<Node> replaceOldNodeWithNewOnes(Node nd, Deque<Node> deque) {
+
 		Deque<Node> frontier = new ArrayDeque<>();
+
 		for (Node n : deque) {
 			if (nd.getState().equals(n.getState())) {
 				if (nd.getFCost() > n.getFCost()) {
@@ -302,7 +236,6 @@ public class A1main {
 	}
 
 	public static ArrayList<Coord> successor(Coord node_state, Map problem) {
-
 		int dir = (node_state.getC() + node_state.getR()) % 2 == 0 ? 0 : 1;
 		ArrayList<Coord> next_states = getNextStates(problem, node_state, dir);
 		return next_states;
@@ -311,6 +244,7 @@ public class A1main {
 	public static ArrayList<Coord> getNextStates(Map problem, Coord node_state, int dir) {
 
 		ArrayList<Coord> next_states = new ArrayList<Coord>();
+
 		// Add right node
 		if (checkRightOrBottomNodeIsValid(node_state.getC(), problem.getMap().length)) {
 			int fi = node_state.getR();
