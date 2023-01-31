@@ -118,12 +118,6 @@ public class A1main {
 		 * 2) The final three lines must be the path, the path in string, path cost, and number of nodes visited/explored, in this order
 		 */
 
-//		boolean path_found=true;
-//		String path="(1,1)(1,2)(1,3)(1,4)(1,5)(2,5)(2,4)(3,4)";
-//		String path_string = "Right Right Right Right Down Left Down";
-//		double path_cost=7.0;
-//		int n_explored=24;
-
 		if(s.getPathFound()) {
 			System.out.println(s.getPath());
 			System.out.println(s.getPathString());
@@ -165,11 +159,6 @@ public class A1main {
 		}
 		Deque<Node> explored = new ArrayDeque<>();
 
-		// TODO delete
-//		Coord coord = new Coord(1,1);
-//		Node node = new Node(null, coord);
-//		expand(node, problem, frontier, explored);
-
 		for (;;) {
 			if (frontier.isEmpty()) {
 				s = new Solution(false, "", "", 0, 0);
@@ -177,15 +166,10 @@ public class A1main {
 			}
 			Node nd = frontier.removeFirst();
 			explored.add(nd);
-			// TODO delete
-			System.out.print("explored\n");
 			for (Node e : explored) {
 				System.out.print(e.getState().getR() + "-" + e.getState().getC() + "\n");
 			}
 			if (goal.equals(nd.getState())) {
-				// TODO delete
-				System.out.print("goal\n");
-				System.out.print(nd.getState()+"\n");
 
 				ArrayList<Node> search_nodes = new ArrayList<Node>();
 				Node search_node = nd;
@@ -224,11 +208,6 @@ public class A1main {
 							break;
 					}
 				}
-				// TODO delete
-				System.out.print("frontier\n");
-				for (Node f : frontier) {
-					System.out.print(f.getState().getR() + "-" + f.getState().getC() + "\n");
-				}
 			}
 		}
 	}
@@ -242,11 +221,6 @@ public class A1main {
 				successors.add(nd);
 			}
 		}
-		// TODO delete
-//		System.out.print("successors\n");
-//		for (Node n : successors) {
-//			System.out.print(n.getState().getC() + "-" + n.getState().getR() + "\n");
-//		}
 		return successors;
 	}
 
@@ -264,11 +238,6 @@ public class A1main {
 
 		int dir = (node_state.getC() + node_state.getR()) % 2 == 0 ? 0 : 1;
 		ArrayList<Coord> next_states = getNextStates(problem, node_state, dir);
-		// TODO delete
-//		System.out.print("next_states\n");
-//		for (Coord e : next_states) {
-//			System.out.print(e.getC() + "-" + e.getR() + "\n");
-//		}
 		return next_states;
 	}
 
