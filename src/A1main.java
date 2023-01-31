@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.util.*;
 
 /********************Starter Code
@@ -18,7 +19,7 @@ public class A1main {
 	static Solution s;
 
 	public enum SearchAlgorithm {
-		BFS, DFS
+		BFS, DFS, AStar, BestF
 	}
 
 	public static void main(String[] args) {
@@ -133,21 +134,23 @@ public class A1main {
 	private static void runSearch(String algo, Map map, Coord start, Coord goal) {
 		switch(algo) {
 		case "BFS": //run BFS
-			treeSearch(map, start, goal, SearchAlgorithm.BFS);
+			search(map, start, goal, SearchAlgorithm.BFS);
 			break;
 		case "DFS": //run DFS
-			treeSearch(map, start, goal, SearchAlgorithm.DFS);
+			search(map, start, goal, SearchAlgorithm.DFS);
 			break;
 		case "BestF": //run BestF
+			search(map, start, goal, SearchAlgorithm.BestF);
 			break;
 		case "AStar": //run AStar
+			search(map, start, goal, SearchAlgorithm.AStar);
 			break;
 		}
 	}
 
-	public static void treeSearch(Map problem, Coord initial_state, Coord goal, SearchAlgorithm alg) {
+	public static void search(Map problem, Coord initial_state, Coord goal, SearchAlgorithm alg) {
 
-		Node initialNode = new Node(null, initial_state);
+		Node initialNode = new Node(null, initial_state, null);
 		Deque<Node> frontier = new ArrayDeque<>();
 		switch (alg) {
 			case BFS:
@@ -155,6 +158,9 @@ public class A1main {
 				break;
 			case DFS:
 				frontier.addFirst(initialNode);
+				break;
+			case BestF, AStar:
+				frontier.add(initialNode);
 				break;
 		}
 		Deque<Node> explored = new ArrayDeque<>();
@@ -164,10 +170,17 @@ public class A1main {
 				s = new Solution(false, "", "", 0, explored.size());
 				return;
 			}
-			Node nd = frontier.removeFirst();
+			Node nd;
+			switch (alg) {
+				case BestF, AStar:
+					nd = removeLowestF(frontier);
+					break;
+				default:
+					nd = frontier.removeFirst();
+					break;
+			}
 			explored.add(nd);
 			if (goal.equals(nd.getState())) {
-
 				ArrayList<Node> search_nodes = new ArrayList<Node>();
 				Node search_node = nd;
 				search_nodes.add(nd);
@@ -195,7 +208,7 @@ public class A1main {
 				s = new Solution(path_found, path, path_string, path_cost, n_explored);
 				return;
 			} else {
-				for (Node n : expand(nd, problem, frontier, explored)) {
+				for (Node n : expand(nd, problem, frontier, explored, goal, alg)) {
 					switch (alg) {
 						case BFS:
 							frontier.addLast(n);
@@ -203,18 +216,43 @@ public class A1main {
 						case DFS:
 							frontier.addFirst(n);
 							break;
+						default:
+							frontier.add(n);
 					}
 				}
 			}
 		}
 	}
 
-	public static ArrayList<Node> expand(Node node, Map problem, Deque<Node> frontier, Deque<Node> explored) {
+	public static Node removeLowestF(Deque<Node> frontier) {
+		Node minN = frontier.getFirst();
+		for (Node n : frontier) {
+			// TODO delete
+			System.out.println(n.getState().getR() + "-" + n.getState().getC() + " f-cost = " + n.getFCost());
+			if (n.getFCost() < minN.getFCost()) {
+				minN = n;
+			}
+		}
+		// TODO delete
+		System.out.println("lowest n = " + minN.getState().getR() + "-" + minN.getState().getC());
+		frontier.remove(minN);
+		return minN;
+	}
+
+	public static ArrayList<Node> expand(Node node, Map problem, Deque<Node> frontier, Deque<Node> explored, Coord goal, SearchAlgorithm alg) {
 		ArrayList<Coord> next_states = successor(node.getState(), problem);
 		ArrayList<Node> successors = new ArrayList<Node>();
 		for (Coord state : next_states) {
 			if (!checkExistenceOfState(state, explored) && !checkExistenceOfState(state, frontier)) {
-				Node nd = new Node(node, state);
+				Node nd;
+				switch (alg) {
+					case BestF, AStar:
+						nd = new Node(node, state, goal);
+						break;
+					default:
+						nd = new Node(node, state, null);
+						break;
+				}
 				successors.add(nd);
 			}
 		}

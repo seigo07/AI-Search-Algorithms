@@ -11,15 +11,19 @@ public class Node {
 	private Coord state;
 	private Node parent_node;
 	private double path_cost;
+	private double f_cost;
 	private int depth;
 
-	public Node(Node parent_node, Coord child_state) {
+	public Node(Node parent_node, Coord child_state, Coord goal) {
 		this.state = child_state;
 		this.parent_node = parent_node;
 		if (this.parent_node != null) {
 //			this.action();
 //			child_state = parent_node.getState();
 			this.path_cost = parent_node.path_cost + getCost(parent_node.state, child_state);
+			if (goal != null) {
+				f_cost = getCost(this.state, goal);
+			}
 			this.depth = parent_node.depth + 1;
 		}
 	}
@@ -32,6 +36,9 @@ public class Node {
 	}
 	public double getPathCost() {
 		return path_cost;
+	}
+	public double getFCost() {
+		return f_cost;
 	}
 	public int getDepth() {
 		return depth;
