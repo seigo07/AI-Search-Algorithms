@@ -161,14 +161,11 @@ public class A1main {
 
 		for (;;) {
 			if (frontier.isEmpty()) {
-				s = new Solution(false, "", "", 0, 0);
+				s = new Solution(false, "", "", 0, explored.size());
 				return;
 			}
 			Node nd = frontier.removeFirst();
 			explored.add(nd);
-			for (Node e : explored) {
-				System.out.print(e.getState().getR() + "-" + e.getState().getC() + "\n");
-			}
 			if (goal.equals(nd.getState())) {
 
 				ArrayList<Node> search_nodes = new ArrayList<Node>();
