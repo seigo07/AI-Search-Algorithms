@@ -16,8 +16,6 @@ import java.util.*;
 
 public class A1main {
 
-	static Solution s;
-
 	public enum SearchAlgorithm {
 		BFS, DFS, AStar, BestF
 	}
