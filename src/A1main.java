@@ -89,15 +89,8 @@ public class A1main {
 				System.out.println(explored.size());
 				return;
 			}
-			Node nd;
-			switch (alg) {
-				case BestF, AStar:
-					nd = removeLowestF(frontier);
-					break;
-				default:
-					nd = frontier.removeFirst();
-					break;
-			}
+			// frontier is already sorted by priority for BestF and AStar.
+			Node nd = frontier.removeFirst();
 			explored.add(nd);
 			if (goal.equals(nd.getState())) {
 				// Output result in case of success
@@ -119,7 +112,9 @@ public class A1main {
 						frontier.addAll(expand(nd, problem, frontier, explored, goal, alg));
 						ArrayList<Node> list = new ArrayList<Node>(frontier);
 						frontier.clear();
-						Collections.sort(list, Comparator.comparing(Node::getFCost).thenComparing(Node::getPriority));
+						Collections.sort(list, Comparator.comparing(Node::getFCost)
+							.thenComparing(Node::getPriority)
+							.thenComparing(Node::getDepth));
 						frontier.addAll(list);
 						break;
 				}
@@ -173,20 +168,7 @@ public class A1main {
 	}
 
 	public static Node removeLowestF(Deque<Node> frontier) {
-
-		Node minN = frontier.getFirst();
-
-		for (Node n : frontier) {
-			if (n.getFCost() < minN.getFCost()) {
-				minN = n;
-			} else if  (n.getFCost() == minN.getFCost()) {
-				if (n.getDepth() < minN.getDepth()) {
-					minN = n;
-				}
-			}
-		}
-		frontier.remove(minN);
-		return minN;
+		return frontier.removeFirst();
 	}
 
 	public static ArrayList<Node> expand(Node node, Map problem, Deque<Node> frontier, Deque<Node> explored, Coord goal, SearchAlgorithm alg) {
