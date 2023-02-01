@@ -13,6 +13,7 @@ public class Node {
 	private double path_cost;
 	private double f_cost;
 	private int depth;
+	private int priority;
 
 	public Node(Node parent_node, Coord child_state, Coord goal, A1main.SearchAlgorithm alg) {
 		this.state = child_state;
@@ -25,9 +26,11 @@ public class Node {
 				switch (alg) {
 					case BestF:
 						f_cost = getCost(this.state, goal);
+						priority = state.getPriority();
 						break;
 					case AStar:
 						f_cost = getCost(this.state, goal) + this.path_cost;
+						priority = state.getPriority();
 						break;
 				}
 			}
@@ -49,6 +52,9 @@ public class Node {
 	}
 	public int getDepth() {
 		return depth;
+	}
+	public int getPriority() {
+		return priority;
 	}
 
 	public void action() {
@@ -76,4 +82,15 @@ public class Node {
 		return list;
 	}
 
+	public int compareTo(Node n) {
+
+		if(this.priority<n.priority){
+			return -1;
+		}else if(this.priority>n.priority){
+			return 1;
+		}else{
+			return 0;
+		}
+
+	}
 }

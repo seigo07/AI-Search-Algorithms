@@ -104,17 +104,24 @@ public class A1main {
 				outputResult(nd, explored);
 				return;
 			} else {
-				for (Node n : expand(nd, problem, frontier, explored, goal, alg)) {
-					switch (alg) {
-						case BFS:
+				switch (alg) {
+					case BFS:
+						for (Node n : expand(nd, problem, frontier, explored, goal, alg)) {
 							frontier.addLast(n);
-							break;
-						case DFS:
+						}
+						break;
+					case DFS:
+						for (Node n : expand(nd, problem, frontier, explored, goal, alg)) {
 							frontier.addFirst(n);
-							break;
-						case BestF, AStar:
-							frontier.add(n);
-					}
+						}
+						break;
+					case BestF, AStar:
+						frontier.addAll(expand(nd, problem, frontier, explored, goal, alg));
+						ArrayList<Node> list = new ArrayList<Node>(frontier);
+						frontier.clear();
+						Collections.sort(list, Comparator.comparing(Node::getFCost).thenComparing(Node::getPriority));
+						frontier.addAll(list);
+						break;
 				}
 			}
 		}
@@ -262,6 +269,7 @@ public class A1main {
 			if (checkNextValueIsValid(problem, fi, si)) {
 				Coord coord = new Coord(fi, si);
 				coord.setDirection("Right");
+				coord.setPriority(1);
 				next_states.add(coord);
 			}
 		}
@@ -274,6 +282,7 @@ public class A1main {
 				if (checkNextValueIsValid(problem, fi, si)) {
 					Coord coord = new Coord(fi, si);
 					coord.setDirection("Down");
+					coord.setPriority(2);
 					next_states.add(coord);
 				}
 			}
@@ -285,6 +294,7 @@ public class A1main {
 			if (checkNextValueIsValid(problem, fi, si)) {
 				Coord coord = new Coord(fi, si);
 				coord.setDirection("Left");
+				coord.setPriority(3);
 				next_states.add(coord);
 			}
 		}
@@ -297,6 +307,7 @@ public class A1main {
 				if (checkNextValueIsValid(problem, fi, si)) {
 					Coord coord = new Coord(fi, si);
 					coord.setDirection("Up");
+					coord.setPriority(4);
 					next_states.add(coord);
 				}
 			}
