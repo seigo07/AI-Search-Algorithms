@@ -27,7 +27,7 @@ public class Node {
 						f_cost = getCost(this.state, goal);
 						break;
 					case AStar:
-						f_cost = getCost(this.state, goal) + path_cost;
+						f_cost = getCost(this.state, goal) + this.path_cost;
 						break;
 				}
 			}

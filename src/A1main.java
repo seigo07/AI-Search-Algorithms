@@ -112,7 +112,7 @@ public class A1main {
 						case DFS:
 							frontier.addFirst(n);
 							break;
-						default:
+						case BestF, AStar:
 							frontier.add(n);
 					}
 				}
@@ -172,6 +172,10 @@ public class A1main {
 		for (Node n : frontier) {
 			if (n.getFCost() < minN.getFCost()) {
 				minN = n;
+			} else if  (n.getFCost() == minN.getFCost()) {
+				if (n.getDepth() < minN.getDepth()) {
+					minN = n;
+				}
 			}
 		}
 		frontier.remove(minN);
@@ -218,8 +222,11 @@ public class A1main {
 
 		for (Node n : deque) {
 			if (nd.getState().equals(n.getState())) {
-				if (nd.getFCost() > n.getFCost()) {
+				if (nd.getFCost() < n.getFCost()) {
 					frontier.addFirst(nd);
+					break;
+				} else {
+					frontier.addFirst(n);
 				}
 			} else {
 				frontier.addFirst(n);
