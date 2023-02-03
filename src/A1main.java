@@ -168,7 +168,7 @@ public class A1main {
 
 	public static ArrayList<Node> expand(Node node, Map problem, Deque<Node> frontier, Deque<Node> explored, Coord goal, SearchAlgorithm alg) {
 
-		ArrayList<Coord> nextStates = successor(node.getState(), problem);
+		ArrayList<Coord> nextStates = getSuccessors(node.getState(), problem);
 		ArrayList<Node> successors = new ArrayList<Node>();
 
 		for (Coord state : nextStates) {
@@ -199,45 +199,10 @@ public class A1main {
 		return successors;
 	}
 
-	// Check state is not contained in a node of explored or frontier and replace old node with new one.
-	public static Deque<Node> replaceOldNodeWithNewOnes(Node nd, Deque<Node> deque) {
-
-		Deque<Node> frontier = new ArrayDeque<>();
-
-		for (Node n : deque) {
-			if (nd.getState().equals(n.getState())) {
-				if (nd.getFCost() < n.getFCost()) {
-					frontier.addFirst(nd);
-					break;
-				} else {
-					frontier.addFirst(n);
-				}
-			} else {
-				frontier.addFirst(n);
-			}
-		}
-		return frontier;
-	}
-
-	// Check state is not contained in a node of explored or frontier
-	public static boolean checkExistenceOfState(Coord state, Deque<Node> deque) {
-		for (Node n : deque) {
-			if (state.equals(n.getState())) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	public static ArrayList<Coord> successor(Coord nodeState, Map problem) {
-		int dir = (nodeState.getC() + nodeState.getR()) % 2 == 0 ? 0 : 1;
-		ArrayList<Coord> nextStates = getNextStates(problem, nodeState, dir);
-		return nextStates;
-	}
-
-	public static ArrayList<Coord> getNextStates(Map problem, Coord nodeState, int dir) {
+	public static ArrayList<Coord> getSuccessors(Coord nodeState, Map problem) {
 
 		ArrayList<Coord> nextStates = new ArrayList<Coord>();
+		int dir = (nodeState.getC() + nodeState.getR()) % 2 == 0 ? 0 : 1;
 
 		// Add right node
 		if (checkRightOrBottomNodeIsValid(nodeState.getC(), problem.getMap().length)) {
@@ -290,6 +255,36 @@ public class A1main {
 			}
 		}
 		return nextStates;
+	}
+
+	// Check state is not contained in a node of explored or frontier and replace old node with new one.
+	public static Deque<Node> replaceOldNodeWithNewOnes(Node nd, Deque<Node> deque) {
+
+		Deque<Node> frontier = new ArrayDeque<>();
+
+		for (Node n : deque) {
+			if (nd.getState().equals(n.getState())) {
+				if (nd.getFCost() < n.getFCost()) {
+					frontier.addFirst(nd);
+					break;
+				} else {
+					frontier.addFirst(n);
+				}
+			} else {
+				frontier.addFirst(n);
+			}
+		}
+		return frontier;
+	}
+
+	// Check state is not contained in a node of explored or frontier
+	public static boolean checkExistenceOfState(Coord state, Deque<Node> deque) {
+		for (Node n : deque) {
+			if (state.equals(n.getState())) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	// Check if the next state is valid
