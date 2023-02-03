@@ -61,9 +61,9 @@ public class A1main {
 		}
 	}
 
-	public static void search(Map problem, Coord initial_state, Coord goal, SearchAlgorithm alg) {
+	public static void search(Map problem, Coord initialState, Coord goal, SearchAlgorithm alg) {
 
-		Node initialNode = new Node(null, initial_state, null, alg);
+		Node initialNode = new Node(null, initialState, null, alg);
 		Deque<Node> frontier = new ArrayDeque<>();
 
 		switch (alg) {
@@ -124,8 +124,7 @@ public class A1main {
 
 	public static void outputFrontier(Deque<Node> frontier, boolean isInformed) {
 		if (!frontier.isEmpty()) {
-			String frontierOutput = "";
-			frontierOutput += "[";
+			String frontierOutput = "[";
 			for (Node n : frontier) {
 				frontierOutput += isInformed ?
 					"(" + n.getState().getR() + "," + n.getState().getC() + "):" + n.getFCost() + "," :
@@ -139,44 +138,40 @@ public class A1main {
 
 	public static void outputResult(Node nd, Deque<Node> explored) {
 
-		ArrayList<Node> search_nodes = new ArrayList<Node>();
-		Node search_node = nd;
-		search_nodes.add(nd);
+		ArrayList<Node> searchNodes = new ArrayList<Node>();
+		Node searchNode = nd;
+		searchNodes.add(nd);
 
 		for (;;) {
-			if (search_node.getParentNode() == null) {
+			if (searchNode.getParentNode() == null) {
 				break;
 			}
-			search_nodes.add(search_node.getParentNode());
-			search_node = search_node.getParentNode();
+			searchNodes.add(searchNode.getParentNode());
+			searchNode = searchNode.getParentNode();
 		}
 
 		String path = "";
-		String path_string = "";
-		Collections.reverse(search_nodes);
-		for (Node e : search_nodes) {
+		String pathString = "";
+		Collections.reverse(searchNodes);
+		for (Node e : searchNodes) {
 			path += "("+e.getState().getR()+","+e.getState().getC()+")";
-			path_string += e.getState().getDirection() + " ";
+			pathString += e.getState().getDirection() + " ";
 		}
-		path_string = path_string.trim();
+		pathString = pathString.trim();
 
 		// Output result in case of success
 		System.out.println(path);
-		System.out.println(path_string);
+		System.out.println(pathString);
 		System.out.println(nd.getPathCost());
 		System.out.println(explored.size());
 	}
 
-	public static Node removeLowestF(Deque<Node> frontier) {
-		return frontier.removeFirst();
-	}
-
 	public static ArrayList<Node> expand(Node node, Map problem, Deque<Node> frontier, Deque<Node> explored, Coord goal, SearchAlgorithm alg) {
 
-		ArrayList<Coord> next_states = successor(node.getState(), problem);
+		ArrayList<Coord> nextStates = successor(node.getState(), problem);
 		ArrayList<Node> successors = new ArrayList<Node>();
 
-		for (Coord state : next_states) {
+		for (Coord state : nextStates) {
 			Node nd;
 			switch (alg) {
 				case BestF:
@@ -234,67 +229,67 @@ public class A1main {
 		return false;
 	}
 
-	public static ArrayList<Coord> successor(Coord node_state, Map problem) {
-		int dir = (node_state.getC() + node_state.getR()) % 2 == 0 ? 0 : 1;
-		ArrayList<Coord> next_states = getNextStates(problem, node_state, dir);
-		return next_states;
+	public static ArrayList<Coord> successor(Coord nodeState, Map problem) {
+		int dir = (nodeState.getC() + nodeState.getR()) % 2 == 0 ? 0 : 1;
+		ArrayList<Coord> nextStates = getNextStates(problem, nodeState, dir);
+		return nextStates;
 	}
 
-	public static ArrayList<Coord> getNextStates(Map problem, Coord node_state, int dir) {
+	public static ArrayList<Coord> getNextStates(Map problem, Coord nodeState, int dir) {
 
-		ArrayList<Coord> next_states = new ArrayList<Coord>();
+		ArrayList<Coord> nextStates = new ArrayList<Coord>();
 
 		// Add right node
-		if (checkRightOrBottomNodeIsValid(node_state.getC(), problem.getMap().length)) {
-			int fi = node_state.getR();
-			int si = node_state.getC() + 1;
+		if (checkRightOrBottomNodeIsValid(nodeState.getC(), problem.getMap().length)) {
+			int fi = nodeState.getR();
+			int si = nodeState.getC() + 1;
 			if (checkNextValueIsValid(problem, fi, si)) {
 				Coord coord = new Coord(fi, si);
 				coord.setDirection("Right");
 				coord.setPriority(1);
-				next_states.add(coord);
+				nextStates.add(coord);
 			}
 		}
 		// Upper case
 		if (dir == 0) {
 			// Add bottom node
-			if (checkRightOrBottomNodeIsValid(node_state.getR(), problem.getMap().length)) {
-				int fi = node_state.getR() + 1;
-				int si = node_state.getC();
+			if (checkRightOrBottomNodeIsValid(nodeState.getR(), problem.getMap().length)) {
+				int fi = nodeState.getR() + 1;
+				int si = nodeState.getC();
 				if (checkNextValueIsValid(problem, fi, si)) {
 					Coord coord = new Coord(fi, si);
 					coord.setDirection("Down");
 					coord.setPriority(2);
-					next_states.add(coord);
+					nextStates.add(coord);
 				}
 			}
 		}
 		// Add left node
-		if (checkLeftOrTopNodeIsValid(node_state.getC())) {
-			int fi = node_state.getR();
-			int si = node_state.getC() - 1;
+		if (checkLeftOrTopNodeIsValid(nodeState.getC())) {
+			int fi = nodeState.getR();
+			int si = nodeState.getC() - 1;
 			if (checkNextValueIsValid(problem, fi, si)) {
 				Coord coord = new Coord(fi, si);
 				coord.setDirection("Left");
 				coord.setPriority(3);
-				next_states.add(coord);
+				nextStates.add(coord);
 			}
 		}
 		// Upper case
 		if (dir == 1) {
 			// Add top node
-			if (checkLeftOrTopNodeIsValid(node_state.getR())) {
-				int fi = node_state.getR() - 1;
-				int si = node_state.getC();
+			if (checkLeftOrTopNodeIsValid(nodeState.getR())) {
+				int fi = nodeState.getR() - 1;
+				int si = nodeState.getC();
 				if (checkNextValueIsValid(problem, fi, si)) {
 					Coord coord = new Coord(fi, si);
 					coord.setDirection("Up");
 					coord.setPriority(4);
-					next_states.add(coord);
+					nextStates.add(coord);
 				}
 			}
 		}
-		return next_states;
+		return nextStates;
 	}
 
 	// Check if the next state is valid

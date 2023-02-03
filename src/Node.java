@@ -9,32 +9,32 @@ import java.util.*;
 public class Node {
 
 	private Coord state;
-	private Node parent_node;
-	private double path_cost;
-	private double f_cost;
+	private Node parentNode;
+	private double pathCost;
+	private double fCost;
 	private int depth;
 	private int priority;
 
-	public Node(Node parent_node, Coord child_state, Coord goal, A1main.SearchAlgorithm alg) {
+	public Node(Node parentNode, Coord child_state, Coord goal, A1main.SearchAlgorithm alg) {
 		this.state = child_state;
-		this.parent_node = parent_node;
-		if (this.parent_node != null) {
+		this.parentNode = parentNode;
+		if (this.parentNode != null) {
 //			this.action();
 //			child_state = parent_node.getState();
-			this.path_cost = parent_node.path_cost + getCost(parent_node.state, child_state);
+			this.pathCost = parentNode.pathCost + getCost(parentNode.state, child_state);
 			if (goal != null) {
 				switch (alg) {
 					case BestF:
-						f_cost = getCost(this.state, goal);
+						fCost = getCost(this.state, goal);
 						priority = state.getPriority();
 						break;
 					case AStar:
-						f_cost = getCost(this.state, goal) + this.path_cost;
+						fCost = getCost(this.state, goal) + this.pathCost;
 						priority = state.getPriority();
 						break;
 				}
 			}
-			this.depth = parent_node.depth + 1;
+			this.depth = parentNode.depth + 1;
 		}
 	}
 
@@ -42,13 +42,13 @@ public class Node {
 		return state;
 	}
 	public Node getParentNode() {
-		return parent_node;
+		return parentNode;
 	}
 	public double getPathCost() {
-		return path_cost;
+		return pathCost;
 	}
 	public double getFCost() {
-		return f_cost;
+		return fCost;
 	}
 	public int getDepth() {
 		return depth;
@@ -58,7 +58,7 @@ public class Node {
 	}
 
 	public void action() {
-		state = parent_node.state;
+		state = parentNode.state;
 	}
 
 	public double getCost(Coord parent_node_state, Coord child_state) {
