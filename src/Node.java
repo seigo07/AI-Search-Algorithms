@@ -71,7 +71,7 @@ public class Node {
 	}
 
 	public ArrayList<Integer> getDistanceList(Coord state) {
-		ArrayList<Integer> list = new ArrayList<Integer>();
+		ArrayList<Integer> list = new ArrayList<>();
 		int dir = (state.getC() + state.getR()) % 2 == 0 ? 0 : 1;
 		int a = -state.getR();
 		int b = (state.getR() + state.getC() - dir) / 2;

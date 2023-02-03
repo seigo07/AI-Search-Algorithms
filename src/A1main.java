@@ -23,7 +23,7 @@ public class A1main {
 	public static void main(String[] args) {
 		//Example: java A1main BFS JCONF03
 
-		/* 
+		/*
 		 * 
 		 * Retrieve input and configuration
 		 * and run search algorithm
@@ -110,7 +110,7 @@ public class A1main {
 						break;
 					case BestF, AStar:
 						frontier.addAll(expand(nd, problem, frontier, explored, goal, alg));
-						ArrayList<Node> list = new ArrayList<Node>(frontier);
+						ArrayList<Node> list = new ArrayList<>(frontier);
 						frontier.clear();
 						Collections.sort(list, Comparator.comparing(Node::getFCost)
 							.thenComparing(Node::getPriority)
@@ -138,7 +138,7 @@ public class A1main {
 
 	public static void outputResult(Node nd, Deque<Node> explored) {
 
-		ArrayList<Node> searchNodes = new ArrayList<Node>();
+		ArrayList<Node> searchNodes = new ArrayList<>();
 		Node searchNode = nd;
 		searchNodes.add(nd);
 
@@ -169,7 +169,7 @@ public class A1main {
 	public static ArrayList<Node> expand(Node node, Map problem, Deque<Node> frontier, Deque<Node> explored, Coord goal, SearchAlgorithm alg) {
 
 		ArrayList<Coord> nextStates = getSuccessors(node.getState(), problem);
-		ArrayList<Node> successors = new ArrayList<Node>();
+		ArrayList<Node> successors = new ArrayList<>();
 
 		for (Coord state : nextStates) {
 			Node nd;
@@ -201,7 +201,7 @@ public class A1main {
 
 	public static ArrayList<Coord> getSuccessors(Coord nodeState, Map problem) {
 
-		ArrayList<Coord> nextStates = new ArrayList<Coord>();
+		ArrayList<Coord> nextStates = new ArrayList<>();
 		int dir = (nodeState.getC() + nodeState.getR()) % 2 == 0 ? 0 : 1;
 
 		// Add right node
