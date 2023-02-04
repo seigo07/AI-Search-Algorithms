@@ -17,7 +17,7 @@ import java.util.*;
 public class A1main {
 
 	public enum SearchAlgorithm {
-		BFS, DFS, AStar, BestF
+		BFS, DFS, AStar, BestF, Bidirectional
 	}
 
 	public static void main(String[] args) {
@@ -56,6 +56,9 @@ public class A1main {
 			break;
 		case "AStar": //run AStar
 			search(map, start, goal, SearchAlgorithm.AStar);
+			break;
+		case "Bidirectional": //run Bidirectional
+			bidirectionalSearch(map, start, goal, SearchAlgorithm.Bidirectional);
 			break;
 		}
 	}
@@ -130,6 +133,98 @@ public class A1main {
 		// Output result in case of failure
 		System.out.println("fail");
 		System.out.println(explored.size());
+	}
+
+	/**
+	 * BIDIRECTIONAL-SEARCH algorithm.
+	 */
+	public static void bidirectionalSearch(Map problem, Coord initialState, Coord goal, SearchAlgorithm alg) {
+
+		// Create initial node with initialState
+		Node startNode = new Node(null, initialState, null, alg, 0);
+		Node goalNode = new Node(null, goal, null, alg, 0);
+		Deque<Node> startFrontier = new ArrayDeque<>();
+		Deque<Node> goalFrontier = new ArrayDeque<>();
+		Deque<Node> startExplored = new ArrayDeque<>();
+		Deque<Node> goalExplored = new ArrayDeque<>();
+
+		startFrontier.addLast(startNode);
+		goalFrontier.addLast(goalNode);
+
+		while (!startFrontier.isEmpty() && !goalFrontier.isEmpty()) {
+
+			System.out.print("startFrontier\n");
+			outputFrontier(startFrontier, false);
+			Node sn = startFrontier.removeFirst();
+			startExplored.add(sn);
+
+			Node intersectNodeFromStart = getIntersectNode(sn, goalExplored);
+
+			if (intersectNodeFromStart != null) {
+				System.out.print("Intersection at: " + intersectNodeFromStart.getState().getR()+"-"+intersectNodeFromStart.getState().getC() + "\n");
+				outputResult(sn, startExplored);
+				outputResult(intersectNodeFromStart, startExplored);
+				return;
+			}
+
+			// Using Deque as que
+			startFrontier.addAll(expandForBidirectional(sn, problem, startFrontier, startExplored, goal, alg));
+
+			System.out.print("goalFrontier\n");
+			outputFrontier(goalFrontier, false);
+			Node gn = goalFrontier.removeFirst();
+			goalExplored.add(gn);
+
+			Node intersectNodeFromGoal = getIntersectNode(gn, startExplored);
+
+			if (intersectNodeFromGoal != null) {
+				System.out.print("Intersection at: " + intersectNodeFromGoal.getState().getR()+"-"+intersectNodeFromGoal.getState().getC() + "\n");
+				outputResult(sn, startExplored);
+				outputResult(intersectNodeFromGoal, goalExplored);
+				return;
+			}
+
+			// Using Deque as que
+			goalFrontier.addAll(expandForBidirectional(gn, problem, goalFrontier, goalExplored, initialState, alg));
+		}
+		// Output result in case of failure
+		System.out.println("fail");
+		System.out.println(startFrontier.size());
+		System.out.println(goalFrontier.size());
+	}
+
+	/**
+	 * Get intersect node.
+	 */
+	public static Node getIntersectNode(Node node, Deque<Node> queue) {
+		for (Node n : queue) {
+			if (node.getState().equals(n.getState())) {
+				if (node.getIsVisited() && n.getIsVisited()) {
+					return n;
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Get successors while the search expand until the algorithm finds the goal.
+	 */
+	public static ArrayList<Node> expandForBidirectional(Node node, Map problem, Deque<Node> frontier, Deque<Node> explored, Coord goal, SearchAlgorithm alg) {
+
+		// Get successors
+		Successor successor = getSuccessor(node.getState(), problem);
+		ArrayList<Node> successors = new ArrayList<>();
+
+		// Add node to successors
+		for (int i = 0; i < successor.getNextStates().size(); i++) {
+			Node nd = new Node(node, successor.getNextStates().get(i), null, alg, successor.getPriorities().get(i));
+			// Check if the state is not contained in a node of explored or frontier
+			if (!checkExistenceOfState(nd.getState(), explored) && !checkExistenceOfState(nd.getState(), frontier)) {
+				successors.add(nd);
+			}
+		}
+		return successors;
 	}
 
 	/**

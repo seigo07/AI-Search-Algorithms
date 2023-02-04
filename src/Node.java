@@ -15,6 +15,7 @@ public class Node {
 	private int depth;
 	// Right = 1, Down = 2, Left = 3, Up = 4
 	private int priority;
+	private boolean isVisited;
 
 	public Node(Node parentNode, Coord child_state, Coord goal, A1main.SearchAlgorithm alg, int priority) {
 		this.state = child_state;
@@ -36,6 +37,9 @@ public class Node {
 				}
 			}
 			this.depth = parentNode.depth + 1;
+		}
+		if (alg == A1main.SearchAlgorithm.Bidirectional) {
+			isVisited = true;
 		}
 	}
 
@@ -60,6 +64,13 @@ public class Node {
 	}
 	public int getPriority() {
 		return priority;
+	}
+	public boolean getIsVisited() {
+		return isVisited;
+	}
+
+	public void setIsVisited() {
+		this.isVisited = true;
 	}
 
 	public void action() {
