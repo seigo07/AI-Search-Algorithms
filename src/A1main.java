@@ -63,7 +63,7 @@ public class A1main {
 
 	public static void search(Map problem, Coord initialState, Coord goal, SearchAlgorithm alg) {
 
-		Node initialNode = new Node(null, initialState, null, alg);
+		Node initialNode = new Node(null, initialState, null, alg, 0);
 		Deque<Node> frontier = new ArrayDeque<>();
 
 		switch (alg) {
@@ -153,9 +153,23 @@ public class A1main {
 		String path = "";
 		String pathString = "";
 		Collections.reverse(searchNodes);
-		for (Node e : searchNodes) {
-			path += "("+e.getState().getR()+","+e.getState().getC()+")";
-			pathString += e.getState().getDirection() + " ";
+		for (Node n : searchNodes) {
+			path += "("+n.getState().getR()+","+n.getState().getC()+")";
+			switch (n.getPriority()) {
+				case 1:
+					pathString += "Right";
+					break;
+				case 2:
+					pathString += "Down";
+					break;
+				case 3:
+					pathString += "Left";
+					break;
+				case 4:
+					pathString += "Up";
+					break;
+			}
+			pathString += " ";
 		}
 		pathString = pathString.trim();
 
@@ -168,30 +182,30 @@ public class A1main {
 
 	public static ArrayList<Node> expand(Node node, Map problem, Deque<Node> frontier, Deque<Node> explored, Coord goal, SearchAlgorithm alg) {
 
-		ArrayList<Coord> nextStates = getSuccessors(node.getState(), problem);
+		Successor successor = getSuccessor(node.getState(), problem);
 		ArrayList<Node> successors = new ArrayList<>();
 
-		for (Coord state : nextStates) {
+		for (int i = 0; i < successor.getNextStates().size(); i++) {
 			Node nd;
 			switch (alg) {
+				case BFS, DFS:
+					nd = new Node(node, successor.getNextStates().get(i), null, alg, successor.getPriorities().get(i));
+					if (!checkExistenceOfState(nd.getState(), explored) && !checkExistenceOfState(nd.getState(), frontier)) {
+						successors.add(nd);
+					}
+					break;
 				case BestF:
-					nd = new Node(node, state, goal, alg);
+					nd = new Node(node, successor.getNextStates().get(i), goal, alg, successor.getPriorities().get(i));
 					if (!checkExistenceOfState(nd.getState(), explored) && !checkExistenceOfState(nd.getState(), frontier)) {
 						successors.add(nd);
 					}
 					break;
 				case AStar:
-					nd = new Node(node, state, goal, alg);
+					nd = new Node(node, successor.getNextStates().get(i), goal, alg, successor.getPriorities().get(i));
 					if (!checkExistenceOfState(nd.getState(), explored) && !checkExistenceOfState(nd.getState(), frontier)) {
 						successors.add(nd);
 					} else if (checkExistenceOfState(nd.getState(), frontier)) {
 						frontier = replaceOldNodeWithNewOnes(nd, frontier);
-					}
-					break;
-				case BFS, DFS:
-					nd = new Node(node, state, null, alg);
-					if (!checkExistenceOfState(nd.getState(), explored) && !checkExistenceOfState(nd.getState(), frontier)) {
-						successors.add(nd);
 					}
 					break;
 			}
@@ -199,9 +213,10 @@ public class A1main {
 		return successors;
 	}
 
-	public static ArrayList<Coord> getSuccessors(Coord nodeState, Map problem) {
+	public static Successor getSuccessor(Coord nodeState, Map problem) {
 
 		ArrayList<Coord> nextStates = new ArrayList<>();
+		ArrayList<Integer> priorities = new ArrayList<>();
 		int dir = (nodeState.getC() + nodeState.getR()) % 2 == 0 ? 0 : 1;
 
 		// Add right node
@@ -209,23 +224,19 @@ public class A1main {
 			int fi = nodeState.getR();
 			int si = nodeState.getC() + 1;
 			if (checkNextValueIsValid(problem, fi, si)) {
-				Coord coord = new Coord(fi, si);
-				coord.setDirection("Right");
-				coord.setPriority(1);
-				nextStates.add(coord);
+				nextStates.add(new Coord(fi, si));
+				priorities.add(1);
 			}
 		}
-		// Upper case
+		// Upwards pointing triangles
 		if (dir == 0) {
 			// Add bottom node
 			if (checkRightOrBottomNodeIsValid(nodeState.getR(), problem.getMap().length)) {
 				int fi = nodeState.getR() + 1;
 				int si = nodeState.getC();
 				if (checkNextValueIsValid(problem, fi, si)) {
-					Coord coord = new Coord(fi, si);
-					coord.setDirection("Down");
-					coord.setPriority(2);
-					nextStates.add(coord);
+					nextStates.add(new Coord(fi, si));
+					priorities.add(2);
 				}
 			}
 		}
@@ -234,27 +245,23 @@ public class A1main {
 			int fi = nodeState.getR();
 			int si = nodeState.getC() - 1;
 			if (checkNextValueIsValid(problem, fi, si)) {
-				Coord coord = new Coord(fi, si);
-				coord.setDirection("Left");
-				coord.setPriority(3);
-				nextStates.add(coord);
+				nextStates.add(new Coord(fi, si));
+				priorities.add(3);
 			}
 		}
-		// Upper case
+		// Downwards pointing triangles
 		if (dir == 1) {
 			// Add top node
 			if (checkLeftOrTopNodeIsValid(nodeState.getR())) {
 				int fi = nodeState.getR() - 1;
 				int si = nodeState.getC();
 				if (checkNextValueIsValid(problem, fi, si)) {
-					Coord coord = new Coord(fi, si);
-					coord.setDirection("Up");
-					coord.setPriority(4);
-					nextStates.add(coord);
+					nextStates.add(new Coord(fi, si));
+					priorities.add(4);
 				}
 			}
 		}
-		return nextStates;
+		return new Successor(nextStates, priorities);
 	}
 
 	// Check state is not contained in a node of explored or frontier and replace old node with new one.

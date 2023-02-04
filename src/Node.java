@@ -15,7 +15,7 @@ public class Node {
 	private int depth;
 	private int priority;
 
-	public Node(Node parentNode, Coord child_state, Coord goal, A1main.SearchAlgorithm alg) {
+	public Node(Node parentNode, Coord child_state, Coord goal, A1main.SearchAlgorithm alg, int priority) {
 		this.state = child_state;
 		this.parentNode = parentNode;
 		if (this.parentNode != null) {
@@ -26,15 +26,14 @@ public class Node {
 				switch (alg) {
 					case BestF:
 						fCost = getCost(this.state, goal);
-						priority = state.getPriority();
 						break;
 					case AStar:
 						fCost = getCost(this.state, goal) + this.pathCost;
-						priority = state.getPriority();
 						break;
 				}
 			}
 			this.depth = parentNode.depth + 1;
+			this.priority = priority;
 		}
 	}
 
@@ -82,15 +81,4 @@ public class Node {
 		return list;
 	}
 
-	public int compareTo(Node n) {
-
-		if(this.priority<n.priority){
-			return -1;
-		}else if(this.priority>n.priority){
-			return 1;
-		}else{
-			return 0;
-		}
-
-	}
 }
