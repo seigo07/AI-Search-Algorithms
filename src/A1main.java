@@ -21,7 +21,6 @@ public class A1main {
 	}
 
 	public static void main(String[] args) {
-		//Example: java A1main BFS JCONF03
 
 		/*
 		 * 
@@ -61,54 +60,70 @@ public class A1main {
 		}
 	}
 
+	/**
+	 * Main TREE-SEARCH function.
+	 */
 	public static void search(Map problem, Coord initialState, Coord goal, SearchAlgorithm alg) {
 
+		// Create initial node with initialState
 		Node initialNode = new Node(null, initialState, null, alg, 0);
 		Deque<Node> frontier = new ArrayDeque<>();
+		Deque<Node> explored = new ArrayDeque<>();
 
 		switch (alg) {
 			case BFS:
+				// Using Deque as que
 				frontier.addLast(initialNode);
 				break;
 			case DFS:
+				// Using Deque as stack
 				frontier.addFirst(initialNode);
 				break;
 			case BestF, AStar:
 				frontier.add(initialNode);
 				break;
 		}
-		Deque<Node> explored = new ArrayDeque<>();
 
 		for (;;) {
-			// Output the coordinate of frontier
+
+			// Output each coordinate of frontier while loop
 			boolean isInformed = (alg == SearchAlgorithm.BestF || alg == SearchAlgorithm.AStar);
 			outputFrontier(frontier, isInformed);
+
+			// Return fail and finish if frontier is empty
 			if (frontier.isEmpty()) {
 				// Output result in case of failure
 				System.out.println("fail");
 				System.out.println(explored.size());
 				return;
 			}
-			// frontier is already sorted by priority for BestF and AStar.
+
+			// Remove and get first node from frontier (This is already sorted by priority for informed search algorithms)
 			Node nd = frontier.removeFirst();
 			explored.add(nd);
+
+			// Output result and finish if the node is equal to goal
 			if (goal.equals(nd.getState())) {
 				// Output result in case of success
 				outputResult(nd, explored);
 				return;
+			// Continue to search until we can get the goal.
 			} else {
 				switch (alg) {
 					case BFS:
 						for (Node n : expand(nd, problem, frontier, explored, goal, alg)) {
+							// Using Deque as que
 							frontier.addLast(n);
 						}
 						break;
 					case DFS:
 						for (Node n : expand(nd, problem, frontier, explored, goal, alg)) {
+							// Using Deque as stack
 							frontier.addFirst(n);
 						}
 						break;
 					case BestF, AStar:
+						// Add all node to frontier in the order of priority
 						frontier.addAll(expand(nd, problem, frontier, explored, goal, alg));
 						ArrayList<Node> list = new ArrayList<>(frontier);
 						frontier.clear();
@@ -122,6 +137,10 @@ public class A1main {
 		}
 	}
 
+	/**
+	 * Output each coordinate of frontier.
+	 * Display coordinate with F_COST in the case of informed search.
+	 */
 	public static void outputFrontier(Deque<Node> frontier, boolean isInformed) {
 		if (!frontier.isEmpty()) {
 			String frontierOutput = "[";
@@ -136,6 +155,9 @@ public class A1main {
 		}
 	}
 
+	/**
+	 * Output result if the search succeeds.
+	 */
 	public static void outputResult(Node nd, Deque<Node> explored) {
 
 		ArrayList<Node> searchNodes = new ArrayList<>();
