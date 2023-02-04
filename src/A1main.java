@@ -84,19 +84,11 @@ public class A1main {
 				break;
 		}
 
-		for (;;) {
+		while (!frontier.isEmpty()) {
 
 			// Output each coordinate of frontier while loop
 			boolean isInformed = (alg == SearchAlgorithm.BestF || alg == SearchAlgorithm.AStar);
 			outputFrontier(frontier, isInformed);
-
-			// Return fail and finish if frontier is empty
-			if (frontier.isEmpty()) {
-				// Output result in case of failure
-				System.out.println("fail");
-				System.out.println(explored.size());
-				return;
-			}
 
 			// Remove and get first node from frontier (This is already sorted by priority for informed search algorithms)
 			Node nd = frontier.removeFirst();
@@ -135,6 +127,9 @@ public class A1main {
 				}
 			}
 		}
+		// Output result in case of failure
+		System.out.println("fail");
+		System.out.println(explored.size());
 	}
 
 	/**
@@ -167,10 +162,7 @@ public class A1main {
 		searchNodes.add(nd);
 
 		// Get the final path by tracing parentNodes from the goal node to root node
-		for (;;) {
-			if (searchNode.getParentNode() == null) {
-				break;
-			}
+		while (searchNode.getParentNode() != null) {
 			searchNodes.add(searchNode.getParentNode());
 			searchNode = searchNode.getParentNode();
 		}
