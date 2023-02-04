@@ -156,8 +156,6 @@ public class A1main {
 			System.out.print("startFrontier\n");
 			outputFrontier(startFrontier, false);
 			Node sn = startFrontier.removeFirst();
-			startExplored.add(sn);
-
 			Node intersectNodeFromStart = getIntersectNode(sn, goalExplored);
 
 			if (intersectNodeFromStart != null) {
@@ -167,23 +165,24 @@ public class A1main {
 				return;
 			}
 
+			startExplored.add(sn);
+
 			// Using Deque as que
 			startFrontier.addAll(expandForBidirectional(sn, problem, startFrontier, startExplored, goal, alg));
 
 			System.out.print("goalFrontier\n");
 			outputFrontier(goalFrontier, false);
 			Node gn = goalFrontier.removeFirst();
-			goalExplored.add(gn);
-
 			Node intersectNodeFromGoal = getIntersectNode(gn, startExplored);
 
 			if (intersectNodeFromGoal != null) {
 				System.out.print("Intersection at: " + intersectNodeFromGoal.getState().getR()+"-"+intersectNodeFromGoal.getState().getC() + "\n");
-				outputResult(sn, startExplored);
-				outputResult(intersectNodeFromGoal, goalExplored);
+				outputResult(intersectNodeFromGoal, startExplored);
+				outputResult(gn, goalExplored);
 				return;
 			}
 
+			goalExplored.add(gn);
 			// Using Deque as que
 			goalFrontier.addAll(expandForBidirectional(gn, problem, goalFrontier, goalExplored, initialState, alg));
 		}
