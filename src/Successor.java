@@ -1,8 +1,8 @@
 import java.util.ArrayList;
 
-/********************Starter Code
+/********************
  * 
- * This represents the Node for search algorithms (state, parent_node, path_cost, depth)
+ * This represents the Successor for search algorithms (nextStates, priorities)
  *
  */
 
@@ -15,6 +15,10 @@ public class Successor {
 		this.nextStates = nextStates;
 		this.priorities = priorities;
 	}
+
+	/**
+	 * Getters.
+	 */
 
 	public ArrayList<Coord> getNextStates() {
 		return nextStates;

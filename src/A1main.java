@@ -259,7 +259,7 @@ public class A1main {
 		ArrayList<Coord> nextStates = new ArrayList<>();
 		ArrayList<Integer> priorities = new ArrayList<>();
 
-		// Check upwards or downwards pointing triangles
+		// dir = 0 if upwards triangle, dir = 1 if downwards triangle
 		int dir = (nodeState.getC() + nodeState.getR()) % 2 == 0 ? 0 : 1;
 
 		// Check if the index of next state is out of bounds or not.
