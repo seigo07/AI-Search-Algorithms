@@ -159,7 +159,7 @@ public class A1main {
 			Node intersectNodeFromStart = getIntersectNode(sn, goalExplored);
 
 			if (intersectNodeFromStart != null) {
-				System.out.print("Intersection at: " + intersectNodeFromStart.getState().getR()+"-"+intersectNodeFromStart.getState().getC() + "\n");
+				System.out.print("Intersection at: ("+intersectNodeFromStart.getState().getR()+","+intersectNodeFromStart.getState().getC()+")\n");
 				outputResult(sn, startExplored);
 				outputResult(intersectNodeFromStart, startExplored);
 				return;
@@ -176,7 +176,7 @@ public class A1main {
 			Node intersectNodeFromGoal = getIntersectNode(gn, startExplored);
 
 			if (intersectNodeFromGoal != null) {
-				System.out.print("Intersection at: " + intersectNodeFromGoal.getState().getR()+"-"+intersectNodeFromGoal.getState().getC() + "\n");
+				System.out.print("Intersection at: ("+intersectNodeFromGoal.getState().getR()+","+intersectNodeFromGoal.getState().getC()+")\n");
 				outputResult(intersectNodeFromGoal, startExplored);
 				outputResult(gn, goalExplored);
 				return;
