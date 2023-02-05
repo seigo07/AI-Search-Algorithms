@@ -309,22 +309,22 @@ public class A1main {
 			switch (alg) {
 				case BFS, DFS:
 					nd = new Node(node, successor.getNextStates().get(i), null, alg, successor.getPriorities().get(i));
-					// Check if the state is not contained in a node of explored or frontier
-					if (!checkNodeExistence(nd.getState(), explored) && !checkNodeExistence(nd.getState(), frontier)) {
+					// Check if the state is not contained in a node of frontier or explored
+					if (!getNodeExistence(nd.getState(), frontier, explored)) {
 						successors.add(nd);
 					}
 					break;
 				case BestF:
 					nd = new Node(node, successor.getNextStates().get(i), goal, alg, successor.getPriorities().get(i));
-					// Check if the state is not contained in a node of explored or frontier
-					if (!checkNodeExistence(nd.getState(), explored) && !checkNodeExistence(nd.getState(), frontier)) {
+					// Check if the state is not contained in a node of frontier or explored
+					if (!getNodeExistence(nd.getState(), frontier, explored)) {
 						successors.add(nd);
 					}
 					break;
 				case AStar:
 					nd = new Node(node, successor.getNextStates().get(i), goal, alg, successor.getPriorities().get(i));
-					// Check if the state is not contained in a node of explored or frontier
-					if (!checkNodeExistence(nd.getState(), explored) && !checkNodeExistence(nd.getState(), frontier)) {
+					// Check if the state is not contained in a node of frontier or explored
+					if (!getNodeExistence(nd.getState(), frontier, explored)) {
 						successors.add(nd);
 					// Check if the state is in a node in frontier but with higher PATH-COST
 					} else if (checkNodeExistence(nd.getState(), frontier)) {
@@ -405,6 +405,25 @@ public class A1main {
 	}
 
 	/**
+	 * Get boolean the value of the existence of node in frontier or explored.
+	 */
+	public static boolean getNodeExistence(Coord state, Deque<Node> frontier, Deque<Node> explored) {
+		return checkNodeExistence(state, frontier) || checkNodeExistence(state, explored);
+	}
+
+	/**
+	 * Check state is not contained in a node of explored or frontier.
+	 */
+	public static boolean checkNodeExistence(Coord state, Deque<Node> deque) {
+		for (Node n : deque) {
+			if (state.equals(n.getState())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * Check state is not contained in a node of explored or frontier and replace old node with new one.
 	 */
 	public static Deque<Node> replaceNode(Node nd, Deque<Node> deque) {
@@ -424,18 +443,6 @@ public class A1main {
 			}
 		}
 		return frontier;
-	}
-
-	/**
-	 * Check state is not contained in a node of explored or frontier.
-	 */
-	public static boolean checkNodeExistence(Coord state, Deque<Node> deque) {
-		for (Node n : deque) {
-			if (state.equals(n.getState())) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 	/**
