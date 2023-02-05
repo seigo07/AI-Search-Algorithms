@@ -156,40 +156,36 @@ public class A1main {
 		goalFrontier.addLast(goalNode);
 
 		while (!startFrontier.isEmpty() && !goalFrontier.isEmpty()) {
-
-			System.out.print("startFrontier\n");
-			outputFrontier(startFrontier, false);
-			Node sn = startFrontier.removeFirst();
-			Node intersectNodeFromStart = getIntersectNode(sn, goalExplored);
-
-			if (intersectNodeFromStart != null) {
-				outputResultForBidirectional(intersectNodeFromStart, sn, startExplored, BidirectionalDirection.Start);
+			if (checkGettingIntersectNode("startFrontier", startFrontier, startExplored, goalExplored, BidirectionalDirection.Start, problem, goal, alg)) {
 				return;
 			}
-
-			startExplored.add(sn);
-
-			// Using Deque as que
-			startFrontier.addAll(expandForBidirectional(sn, problem, startFrontier, startExplored, goal, alg));
-
-			System.out.print("goalFrontier\n");
-			outputFrontier(goalFrontier, false);
-			Node gn = goalFrontier.removeFirst();
-			Node intersectNodeFromGoal = getIntersectNode(gn, startExplored);
-
-			if (intersectNodeFromGoal != null) {
-				outputResultForBidirectional(intersectNodeFromGoal, gn, goalExplored, BidirectionalDirection.Goal);
+			if (checkGettingIntersectNode("goalFrontier", goalFrontier, goalExplored, startExplored, BidirectionalDirection.Goal, problem, initialState, alg)) {
 				return;
 			}
-
-			goalExplored.add(gn);
-			// Using Deque as que
-			goalFrontier.addAll(expandForBidirectional(gn, problem, goalFrontier, goalExplored, initialState, alg));
 		}
 		// Output result in case of failure
 		System.out.println("fail");
 		System.out.println(startFrontier.size());
 		System.out.println(goalFrontier.size());
+	}
+
+	/**
+	 * Output result if the search succeeds.
+	 */
+	public static boolean checkGettingIntersectNode(String outputText, Deque<Node> frontier, Deque<Node> explored, Deque<Node> targetExplored, BidirectionalDirection dir, Map problem, Coord state, SearchAlgorithm alg) {
+		System.out.print(outputText+"\n");
+		outputFrontier(frontier, false);
+		Node n = frontier.removeFirst();
+		Node intersectNode = getIntersectNode(n, targetExplored);
+
+		if (intersectNode != null) {
+			outputResultForBidirectional(intersectNode, n, explored, dir);
+			return true;
+		}
+
+		explored.add(n);
+		frontier.addAll(expandForBidirectional(n, problem, frontier, explored, state, alg));
+		return false;
 	}
 
 	/**
