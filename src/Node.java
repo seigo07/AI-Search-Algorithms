@@ -83,15 +83,15 @@ public class Node {
 	/**
 	 * Calculate H-Cost based on Manhattan distance heuristic on triangular grid.
 	 */
-	public double getCost(Coord parentNodeState, Coord childState) {
+	public double getCost(Coord fromState, Coord toState) {
 
-		ArrayList<Integer> parentCoordinates = getNewCoordinates(parentNodeState);
-		ArrayList<Integer> childCoordinates = getNewCoordinates(childState);
+		ArrayList<Integer> fromCoordinates = getNewCoordinates(fromState);
+		ArrayList<Integer> toCoordinates = getNewCoordinates(toState);
 
-		// Manhattan distance = | childCoordinates(0) − parentCoordinates(0) | + | childCoordinates(1) − parentCoordinates(1) | + | childCoordinates(2) − parentCoordinates(2) |
-		int a = childCoordinates.get(0) - parentCoordinates.get(0);
-		int b = childCoordinates.get(1) - parentCoordinates.get(1);
-		int c = childCoordinates.get(2) - parentCoordinates.get(2);
+		// Manhattan distance = | fromCoordinates(0) − toCoordinates(0) | + | fromCoordinates(1) − toCoordinates(1) | + | fromCoordinates(2) − toCoordinates(2) |
+		int a = fromCoordinates.get(0) - toCoordinates.get(0);
+		int b = fromCoordinates.get(1) - toCoordinates.get(1);
+		int c = fromCoordinates.get(2) - toCoordinates.get(2);
 
 		// H-distance = | a | + | b | + | c |
 		return Math.abs(a) + Math.abs(b) + Math.abs(c);
