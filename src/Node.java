@@ -26,10 +26,10 @@ public class Node {
 		if (this.parentNode != null) {
 //			this.action();
 //			child_state = parent_node.getState();
-			this.hCost = getHCost(parentNode.state, childState);
-			this.pathCost = parentNode.pathCost + this.hCost;
+			this.pathCost = parentNode.pathCost + getCost(parentNode.state, childState);
 			// Set fCost for informed search
 			if (goal != null) {
+				this.hCost = getCost(this.state, goal);
 				switch (alg) {
 					case BestF:
 						fCost = this.hCost;
@@ -83,7 +83,7 @@ public class Node {
 	/**
 	 * Calculate H-Cost based on Manhattan distance heuristic on triangular grid.
 	 */
-	public double getHCost(Coord parentNodeState, Coord childState) {
+	public double getCost(Coord parentNodeState, Coord childState) {
 
 		ArrayList<Integer> parentCoordinates = getNewCoordinates(parentNodeState);
 		ArrayList<Integer> childCoordinates = getNewCoordinates(childState);
