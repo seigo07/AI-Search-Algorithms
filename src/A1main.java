@@ -218,8 +218,8 @@ public class A1main {
 		// Add node to successors
 		for (int i = 0; i < successor.getNextStates().size(); i++) {
 			Node nd = new Node(node, successor.getNextStates().get(i), null, alg, successor.getPriorities().get(i));
-			// Check if the state is not contained in a node of explored or frontier
-			if (!checkNodeExistence(nd.getState(), explored) && !checkNodeExistence(nd.getState(), frontier)) {
+			// Check if the state is not contained in a node of frontier or explored
+			if (!getNodeExistence(nd.getState(), frontier, explored)) {
 				successors.add(nd);
 			}
 		}
