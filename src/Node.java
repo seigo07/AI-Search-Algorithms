@@ -19,14 +19,14 @@ public class Node {
 	private int priority;
 	private boolean isVisited;
 
-	public Node(Node parentNode, Coord child_state, Coord goal, A1main.SearchAlgorithm alg, int priority) {
-		this.state = child_state;
+	public Node(Node parentNode, Coord childState, Coord goal, A1main.SearchAlgorithm alg, int priority) {
+		this.state = childState;
 		this.parentNode = parentNode;
 		this.priority = priority;
 		if (this.parentNode != null) {
 //			this.action();
 //			child_state = parent_node.getState();
-			this.hCost = getCost(parentNode.state, child_state);
+			this.hCost = getHCost(parentNode.state, childState);
 			this.pathCost = parentNode.pathCost + this.hCost;
 			// Set fCost for informed search
 			if (goal != null) {
@@ -81,17 +81,17 @@ public class Node {
 	}
 
 	/**
-	 * Calculate cost based on Manhattan distance heuristic on triangular grid.
+	 * Calculate H-Cost based on Manhattan distance heuristic on triangular grid.
 	 */
-	public double getCost(Coord parent_node_state, Coord child_state) {
+	public double getHCost(Coord parentNodeState, Coord childState) {
 
-		ArrayList<Integer> pList = getDistanceList(parent_node_state);
-		ArrayList<Integer> cList = getDistanceList(child_state);
+		ArrayList<Integer> parentCoordinates = getNewCoordinates(parentNodeState);
+		ArrayList<Integer> childCoordinates = getNewCoordinates(childState);
 
-		// Manhattan distance = | cList(0) − pList(0) | + | cList(1) − pList(1) | + | cList(2) − pList(2) |
-		int a = cList.get(0) - pList.get(0);
-		int b = cList.get(1) - pList.get(1);
-		int c = cList.get(2) - pList.get(2);
+		// Manhattan distance = | childCoordinates(0) − parentCoordinates(0) | + | childCoordinates(1) − parentCoordinates(1) | + | childCoordinates(2) − parentCoordinates(2) |
+		int a = childCoordinates.get(0) - parentCoordinates.get(0);
+		int b = childCoordinates.get(1) - parentCoordinates.get(1);
+		int c = childCoordinates.get(2) - parentCoordinates.get(2);
 
 		// H-distance = | a | + | b | + | c |
 		return Math.abs(a) + Math.abs(b) + Math.abs(c);
@@ -100,7 +100,7 @@ public class Node {
 	/**
 	 * Calculate distance list based on Manhattan distance heuristic on triangular grid.
 	 */
-	public ArrayList<Integer> getDistanceList(Coord state) {
+	public ArrayList<Integer> getNewCoordinates(Coord state) {
 
 		ArrayList<Integer> list = new ArrayList<>();
 
