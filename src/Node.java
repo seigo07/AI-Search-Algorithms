@@ -11,6 +11,8 @@ public class Node {
 	private Coord state;
 	private Node parentNode;
 	private double pathCost;
+	// The estimated cost of the path from the state at node n to the goal
+	private double hCost;
 	private double fCost;
 	private int depth;
 	// Right = 1, Down = 2, Left = 3, Up = 4
@@ -24,15 +26,16 @@ public class Node {
 		if (this.parentNode != null) {
 //			this.action();
 //			child_state = parent_node.getState();
-			this.pathCost = parentNode.pathCost + getCost(parentNode.state, child_state);
+			this.hCost = getCost(parentNode.state, child_state);
+			this.pathCost = parentNode.pathCost + this.hCost;
 			// Set fCost for informed search
 			if (goal != null) {
 				switch (alg) {
 					case BestF:
-						fCost = getCost(this.state, goal);
+						fCost = this.hCost;
 						break;
 					case AStar:
-						fCost = getCost(this.state, goal) + this.pathCost;
+						fCost = this.hCost + this.pathCost;
 						break;
 				}
 			}
