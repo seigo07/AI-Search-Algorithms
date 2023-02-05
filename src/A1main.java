@@ -20,6 +20,10 @@ public class A1main {
 		BFS, DFS, AStar, BestF, Bidirectional
 	}
 
+	public enum BidirectionalDirection {
+		Start, Goal
+	}
+
 	public static void main(String[] args) {
 
 		/*
@@ -159,9 +163,7 @@ public class A1main {
 			Node intersectNodeFromStart = getIntersectNode(sn, goalExplored);
 
 			if (intersectNodeFromStart != null) {
-				System.out.print("Intersection at: ("+intersectNodeFromStart.getState().getR()+","+intersectNodeFromStart.getState().getC()+")\n");
-				outputResult(sn, startExplored);
-				outputResult(intersectNodeFromStart, startExplored);
+				outputResultForBidirectional(intersectNodeFromStart, sn, startExplored, BidirectionalDirection.Start);
 				return;
 			}
 
@@ -176,9 +178,7 @@ public class A1main {
 			Node intersectNodeFromGoal = getIntersectNode(gn, startExplored);
 
 			if (intersectNodeFromGoal != null) {
-				System.out.print("Intersection at: ("+intersectNodeFromGoal.getState().getR()+","+intersectNodeFromGoal.getState().getC()+")\n");
-				outputResult(intersectNodeFromGoal, startExplored);
-				outputResult(gn, goalExplored);
+				outputResultForBidirectional(intersectNodeFromGoal, gn, goalExplored, BidirectionalDirection.Goal);
 				return;
 			}
 
@@ -224,6 +224,23 @@ public class A1main {
 			}
 		}
 		return successors;
+	}
+
+	/**
+	 * Output result if the search succeeds.
+	 */
+	public static void outputResultForBidirectional(Node intersectNode, Node nd, Deque<Node> explored, BidirectionalDirection dir) {
+		System.out.print("Intersection at: ("+intersectNode.getState().getR()+","+intersectNode.getState().getC()+")\n");
+		switch (dir) {
+			case Start:
+				outputResult(nd, explored);
+				outputResult(intersectNode, explored);
+				break;
+			case Goal:
+				outputResult(intersectNode, explored);
+				outputResult(nd, explored);
+				break;
+		}
 	}
 
 	/**
