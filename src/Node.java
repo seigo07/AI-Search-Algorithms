@@ -102,20 +102,20 @@ public class Node {
 	 */
 	public ArrayList<Integer> getNewCoordinates(Coord state) {
 
-		ArrayList<Integer> list = new ArrayList<>();
+		ArrayList<Integer> newCoordinates = new ArrayList<>();
 
 		// dir = 0 if upwards triangle, dir = 1 if downwards triangle
 		int dir = (state.getC() + state.getR()) % 2 == 0 ? 0 : 1;
 
 		// a = −row b = (row + col − dir) / 2 c = (row + col − dir) / 2 − row + dir
-		int a = -state.getR();
+		int a = - state.getR();
 		int b = (state.getR() + state.getC() - dir) / 2;
 		int c = (state.getR() + state.getC() - dir) / 2 - state.getR() + dir;
-		list.add(a);
-		list.add(b);
-		list.add(c);
+		newCoordinates.add(a);
+		newCoordinates.add(b);
+		newCoordinates.add(c);
 
-		return list;
+		return newCoordinates;
 	}
 
 }
