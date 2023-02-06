@@ -25,21 +25,24 @@ public class Node {
 		this.priority = priority;
 		if (this.parentNode != null) {
 //			this.action();
-//			child_state = parent_node.getState();
+//			childState = parentNode.getState();
 			this.pathCost = parentNode.pathCost + getCost(parentNode.state, childState);
-			// Set fCost for informed search
-			if (goal != null) {
-				this.hCost = getCost(this.state, goal);
-				switch (alg) {
-					case BestF:
-						fCost = this.hCost;
-						break;
-					case AStar:
-						fCost = this.hCost + this.pathCost;
-						break;
-				}
-			}
 			this.depth = parentNode.depth + 1;
+		} else {
+			this.pathCost = 0;
+			this.depth = 0;
+		}
+		// Set fCost for informed search
+		if (goal != null) {
+			this.hCost = getCost(this.state, goal);
+			switch (alg) {
+				case BestF:
+					fCost = this.hCost;
+					break;
+				case AStar:
+					fCost = this.hCost + this.pathCost;
+					break;
+			}
 		}
 		if (alg == A1main.SearchAlgorithm.Bidirectional) {
 			isVisited = true;

@@ -27,7 +27,7 @@ public class A1main {
 	public static void main(String[] args) {
 
 		/*
-		 * 
+		 *
 		 * Retrieve input and configuration
 		 * and run search algorithm
 		 *
@@ -35,13 +35,13 @@ public class A1main {
 
 		Conf conf = Conf.valueOf(args[1]);
 
-		System.out.println("Configuration:"+args[1]);
-		System.out.println("Map:");
-		printMap(conf.getMap(), conf.getS(), conf.getG());
-		System.out.println("Departure port: Start (r_s,c_s): "+conf.getS());
-		System.out.println("Destination port: Goal (r_g,c_g): "+conf.getG());
-		System.out.println("Search algorithm: "+args[0]);
-		System.out.println();
+//		System.out.println("Configuration:"+args[1]);
+//		System.out.println("Map:");
+//		printMap(conf.getMap(), conf.getS(), conf.getG());
+//		System.out.println("Departure port: Start (r_s,c_s): "+conf.getS());
+//		System.out.println("Destination port: Goal (r_g,c_g): "+conf.getG());
+//		System.out.println("Search algorithm: "+args[0]);
+//		System.out.println();
 
 		//run your search algorithm 
 		runSearch(args[0],conf.getMap(),conf.getS(),conf.getG());
@@ -73,20 +73,23 @@ public class A1main {
 	public static void search(Map problem, Coord initialState, Coord goal, SearchAlgorithm alg) {
 
 		// Create initial node with initialState
-		Node initialNode = new Node(null, initialState, null, alg, 0);
+		Node initialNode;
 		Deque<Node> frontier = new ArrayDeque<>();
 		Deque<Node> explored = new ArrayDeque<>();
 
 		switch (alg) {
 			case BFS:
 				// Using Deque as que
+				initialNode = new Node(null, initialState, null, alg, 0);
 				frontier.addLast(initialNode);
 				break;
 			case DFS:
+				initialNode = new Node(null, initialState, null, alg, 0);
 				// Using Deque as stack
 				frontier.addFirst(initialNode);
 				break;
 			case BestF, AStar:
+				initialNode = new Node(null, initialState, goal, alg, 0);
 				frontier.add(initialNode);
 				break;
 		}
