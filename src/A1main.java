@@ -73,26 +73,10 @@ public class A1main {
 	public static void search(Map problem, Coord initialState, Coord goal, SearchAlgorithm alg) {
 
 		// Create initial node with initialState
-		Node initialNode;
 		Deque<Node> frontier = new ArrayDeque<>();
 		Deque<Node> explored = new ArrayDeque<>();
-
-		switch (alg) {
-			case BFS:
-				// Using Deque as que
-				initialNode = new Node(null, initialState, null, alg, 0);
-				frontier.addLast(initialNode);
-				break;
-			case DFS:
-				initialNode = new Node(null, initialState, null, alg, 0);
-				// Using Deque as stack
-				frontier.addFirst(initialNode);
-				break;
-			case BestF, AStar:
-				initialNode = new Node(null, initialState, goal, alg, 0);
-				frontier.add(initialNode);
-				break;
-		}
+		Node initialNode = new Node(null, initialState, goal, alg, 0);
+		frontier.add(initialNode);
 
 		while (!frontier.isEmpty()) {
 
