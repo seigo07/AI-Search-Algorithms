@@ -16,14 +16,6 @@ import java.util.*;
 
 public class A1main {
 
-	public enum SearchAlgorithm {
-		BFS, DFS, AStar, BestF, Bidirectional
-	}
-
-	public enum BidirectionalDirection {
-		Start, Goal
-	}
-
 	public static void main(String[] args) {
 
 		/*
@@ -42,19 +34,19 @@ public class A1main {
 	private static void runSearch(String algo, Map map, Coord start, Coord goal) {
 		switch(algo) {
 		case "BFS": //run BFS
-			search(map, start, goal, SearchAlgorithm.BFS);
+			search(map, start, goal, Algorithms.BFS);
 			break;
 		case "DFS": //run DFS
-			search(map, start, goal, SearchAlgorithm.DFS);
+			search(map, start, goal, Algorithms.DFS);
 			break;
 		case "BestF": //run BestF
-			search(map, start, goal, SearchAlgorithm.BestF);
+			search(map, start, goal, Algorithms.BestF);
 			break;
 		case "AStar": //run AStar
-			search(map, start, goal, SearchAlgorithm.AStar);
+			search(map, start, goal, Algorithms.AStar);
 			break;
 		case "Bidirectional": //run Bidirectional
-			bidirectionalSearch(map, start, goal, SearchAlgorithm.Bidirectional);
+			bidirectionalSearch(map, start, goal, Algorithms.Bidirectional);
 			break;
 		}
 	}
@@ -62,7 +54,7 @@ public class A1main {
 	/**
 	 * Main TREE-SEARCH function.
 	 */
-	public static void search(Map problem, Coord initialState, Coord goal, SearchAlgorithm alg) {
+	public static void search(Map problem, Coord initialState, Coord goal, Algorithms alg) {
 
 		// Create initial node with initialState
 		Deque<Node> frontier = new ArrayDeque<>();
@@ -73,11 +65,11 @@ public class A1main {
 		while (!frontier.isEmpty()) {
 
 			// Output each coordinate of frontier while loop
-			boolean isInformed = (alg == SearchAlgorithm.BestF || alg == SearchAlgorithm.AStar);
+			boolean isInformed = (alg == Algorithms.BestF || alg == Algorithms.AStar);
 			outputFrontier(frontier, isInformed);
 
 			// Remove and get node from frontier (frontier queue is already sorted by priority for informed search algorithms)
-			Node nd = alg == SearchAlgorithm.DFS ? frontier.removeLast() : frontier.removeFirst();
+			Node nd = alg == Algorithms.DFS ? frontier.removeLast() : frontier.removeFirst();
 			explored.add(nd);
 
 			// Output result and finish if the node is equal to goal
@@ -182,7 +174,7 @@ public class A1main {
 	/**
 	 * Get successors while the search expand until the algorithm finds the goal.
 	 */
-	public static Deque<Node> expand(Node node, Map problem, Deque<Node> frontier, Deque<Node> explored, Coord goal, SearchAlgorithm alg) {
+	public static Deque<Node> expand(Node node, Map problem, Deque<Node> frontier, Deque<Node> explored, Coord goal, Algorithms alg) {
 
 		// Get successors
 		Successor successor = getSuccessor(node.getState(), problem);
@@ -363,7 +355,7 @@ public class A1main {
 	/**
 	 * BIDIRECTIONAL-SEARCH algorithm.
 	 */
-	public static void bidirectionalSearch(Map problem, Coord initialState, Coord goal, SearchAlgorithm alg) {
+	public static void bidirectionalSearch(Map problem, Coord initialState, Coord goal, Algorithms alg) {
 
 		// Create initial node with initialState
 		Node startNode = new Node(null, initialState, null, alg, 0);
@@ -377,10 +369,10 @@ public class A1main {
 		goalFrontier.addLast(goalNode);
 
 		while (!startFrontier.isEmpty() && !goalFrontier.isEmpty()) {
-			if (checkGettingIntersectNode("startFrontier", startFrontier, startExplored, goalExplored, BidirectionalDirection.Start, problem, goal, alg)) {
+			if (checkGettingIntersectNode("startFrontier", startFrontier, startExplored, goalExplored, Directions.Start, problem, goal, alg)) {
 				return;
 			}
-			if (checkGettingIntersectNode("goalFrontier", goalFrontier, goalExplored, startExplored, BidirectionalDirection.Goal, problem, initialState, alg)) {
+			if (checkGettingIntersectNode("goalFrontier", goalFrontier, goalExplored, startExplored, Directions.Goal, problem, initialState, alg)) {
 				return;
 			}
 		}
@@ -393,7 +385,7 @@ public class A1main {
 	/**
 	 * Output result if the search succeeds.
 	 */
-	public static boolean checkGettingIntersectNode(String outputText, Deque<Node> frontier, Deque<Node> explored, Deque<Node> targetExplored, BidirectionalDirection dir, Map problem, Coord state, SearchAlgorithm alg) {
+	public static boolean checkGettingIntersectNode(String outputText, Deque<Node> frontier, Deque<Node> explored, Deque<Node> targetExplored, Directions dir, Map problem, Coord state, Algorithms alg) {
 		System.out.print(outputText+"\n");
 		outputFrontier(frontier, false);
 		Node n = frontier.removeFirst();
@@ -426,7 +418,7 @@ public class A1main {
 	/**
 	 * Get successors while the search expand until the algorithm finds the goal.
 	 */
-	public static ArrayList<Node> expandForBidirectional(Node node, Map problem, Deque<Node> frontier, Deque<Node> explored, Coord goal, SearchAlgorithm alg) {
+	public static ArrayList<Node> expandForBidirectional(Node node, Map problem, Deque<Node> frontier, Deque<Node> explored, Coord goal, Algorithms alg) {
 
 		// Get successors
 		Successor successor = getSuccessor(node.getState(), problem);
@@ -446,7 +438,7 @@ public class A1main {
 	/**
 	 * Output result if the search succeeds.
 	 */
-	public static void outputResultForBidirectional(Node intersectNode, Node nd, Deque<Node> explored, BidirectionalDirection dir) {
+	public static void outputResultForBidirectional(Node intersectNode, Node nd, Deque<Node> explored, Directions dir) {
 		System.out.print("Intersection at: ("+intersectNode.getState().getR()+","+intersectNode.getState().getC()+")\n");
 		switch (dir) {
 			case Start:

@@ -19,13 +19,11 @@ public class Node {
 	private int priority;
 	private boolean isVisited;
 
-	public Node(Node parentNode, Coord childState, Coord goal, A1main.SearchAlgorithm alg, int priority) {
+	public Node(Node parentNode, Coord childState, Coord goal, Algorithms alg, int priority) {
 		this.state = childState;
 		this.parentNode = parentNode;
 		this.priority = priority;
 		if (this.parentNode != null) {
-//			this.action();
-//			childState = parentNode.getState();
 			this.pathCost = parentNode.pathCost + getCost(parentNode.state, childState);
 			this.depth = parentNode.depth + 1;
 		} else {
@@ -44,7 +42,7 @@ public class Node {
 					break;
 			}
 		}
-		if (alg == A1main.SearchAlgorithm.Bidirectional) {
+		if (alg == Algorithms.Bidirectional) {
 			isVisited = true;
 		}
 	}
@@ -73,14 +71,6 @@ public class Node {
 	}
 	public boolean getIsVisited() {
 		return isVisited;
-	}
-
-	public void setIsVisited() {
-		this.isVisited = true;
-	}
-
-	public void action() {
-		state = parentNode.state;
 	}
 
 	/**
