@@ -19,4 +19,5 @@ Informed and uninformed search algorithms for the marine navigation planning pro
 ```
 cd A1/src
 javac *.java
+java A1main <DFS|BFS|AStar|BestF|Bidirectional|> <ConfID>
 ```
