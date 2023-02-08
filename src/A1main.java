@@ -1,4 +1,3 @@
-import javax.swing.*;
 import java.util.*;
 
 /********************Starter Code
@@ -187,7 +186,7 @@ public class A1main {
 				case BFS:
 					nd = new Node(node, successor.getNextStates().get(i), null, alg, successor.getPriorities().get(i));
 					// Check if the state is not contained in a node of frontier or explored
-					if (!getNodeExistence(nd.getState(), frontier, explored)) {
+					if (!isNodeExist(nd.getState(), frontier, explored)) {
 						// Using Deque as queue
 						successors.add(nd);
 					}
@@ -195,7 +194,7 @@ public class A1main {
 				case DFS:
 					nd = new Node(node, successor.getNextStates().get(i), null, alg, successor.getPriorities().get(i));
 					// Check if the state is not contained in a node of frontier or explored
-					if (!getNodeExistence(nd.getState(), frontier, explored)) {
+					if (!isNodeExist(nd.getState(), frontier, explored)) {
 						// Using Deque as stack
 						successors.addFirst(nd);
 					}
@@ -203,17 +202,17 @@ public class A1main {
 				case BestF:
 					nd = new Node(node, successor.getNextStates().get(i), goal, alg, successor.getPriorities().get(i));
 					// Check if the state is not contained in a node of frontier or explored
-					if (!getNodeExistence(nd.getState(), frontier, explored)) {
+					if (!isNodeExist(nd.getState(), frontier, explored)) {
 						successors.add(nd);
 					}
 					break;
 				case AStar:
 					nd = new Node(node, successor.getNextStates().get(i), goal, alg, successor.getPriorities().get(i));
 					// Check if the state is not contained in a node of frontier or explored
-					if (!getNodeExistence(nd.getState(), frontier, explored)) {
+					if (!isNodeExist(nd.getState(), frontier, explored)) {
 						successors.add(nd);
 					// Check if the state is in a node in frontier but with higher PATH-COST
-					} else if (checkNodeExistence(nd.getState(), frontier)) {
+					} else if (isNodeExistInQueue(nd.getState(), frontier)) {
 						// Replace old node with nd
 						frontier = replaceNode(nd, frontier);
 					}
@@ -235,11 +234,11 @@ public class A1main {
 		int dir = (nodeState.getC() + nodeState.getR()) % 2 == 0 ? 0 : 1;
 
 		// Check if the index of next state is out of bounds or not.
-		if (checkRightOrBottomNode(nodeState.getC(), problem.getMap().length)) {
+		if (isRightOrBottomStateValid(nodeState.getC(), problem.getMap().length)) {
 			int fi = nodeState.getR();
 			int si = nodeState.getC() + 1;
 			// Check if the next value of node is 1 or not
-			if (checkNextValue(problem, fi, si)) {
+			if (isNextStateValid(problem, fi, si)) {
 				// Add right node
 				nextStates.add(new Coord(fi, si));
 				priorities.add(1);
@@ -249,11 +248,11 @@ public class A1main {
 		// Upwards pointing triangles
 		if (dir == 0) {
 			// Check if the index of next state is out of bounds or not.
-			if (checkRightOrBottomNode(nodeState.getR(), problem.getMap().length)) {
+			if (isRightOrBottomStateValid(nodeState.getR(), problem.getMap().length)) {
 				int fi = nodeState.getR() + 1;
 				int si = nodeState.getC();
 				// Check if the next value of node is 1 or not
-				if (checkNextValue(problem, fi, si)) {
+				if (isNextStateValid(problem, fi, si)) {
 					// Add bottom node
 					nextStates.add(new Coord(fi, si));
 					priorities.add(2);
@@ -262,11 +261,11 @@ public class A1main {
 		}
 
 		// Check if the index of next state is out of bounds or not.
-		if (checkLeftOrTopNode(nodeState.getC())) {
+		if (isLeftOrTopStateValid(nodeState.getC())) {
 			int fi = nodeState.getR();
 			int si = nodeState.getC() - 1;
 			// Check if the next value of node is 1 or not
-			if (checkNextValue(problem, fi, si)) {
+			if (isNextStateValid(problem, fi, si)) {
 				// Add left node
 				nextStates.add(new Coord(fi, si));
 				priorities.add(3);
@@ -276,11 +275,11 @@ public class A1main {
 		// Downwards pointing triangles
 		if (dir == 1) {
 			// Check if the index of next state is out of bounds or not.
-			if (checkLeftOrTopNode(nodeState.getR())) {
+			if (isLeftOrTopStateValid(nodeState.getR())) {
 				int fi = nodeState.getR() - 1;
 				int si = nodeState.getC();
 				// Check if the next value of node is 1 or not
-				if (checkNextValue(problem, fi, si)) {
+				if (isNextStateValid(problem, fi, si)) {
 					// Add top node
 					nextStates.add(new Coord(fi, si));
 					priorities.add(4);
@@ -293,14 +292,14 @@ public class A1main {
 	/**
 	 * Get boolean the value of the existence of node in frontier or explored.
 	 */
-	public static boolean getNodeExistence(Coord state, Deque<Node> frontier, Deque<Node> explored) {
-		return checkNodeExistence(state, frontier) || checkNodeExistence(state, explored);
+	public static boolean isNodeExist(Coord state, Deque<Node> frontier, Deque<Node> explored) {
+		return isNodeExistInQueue(state, frontier) || isNodeExistInQueue(state, explored);
 	}
 
 	/**
-	 * Check state is not contained in a node of explored or frontier.
+	 * Check state is not contained in a node of frontier or explored.
 	 */
-	public static boolean checkNodeExistence(Coord state, Deque<Node> deque) {
+	public static boolean isNodeExistInQueue(Coord state, Deque<Node> deque) {
 		for (Node n : deque) {
 			if (state.equals(n.getState())) {
 				return true;
@@ -334,21 +333,21 @@ public class A1main {
 	/**
 	 * Check if the next state is valid (check the value of next node is 0 or 1).
 	 */
-	public static boolean checkNextValue(Map problem, int fi, int si) {
+	public static boolean isNextStateValid(Map problem, int fi, int si) {
 		return problem.getMap()[fi][si] != 1;
 	}
 
 	/**
 	 * Check if index - 1 < 0.
 	 */
-	public static boolean checkLeftOrTopNode(int index) {
+	public static boolean isLeftOrTopStateValid(int index) {
 		return index - 1 >= 0;
 	}
 
 	/**
 	 * Check if index + 1 < upper limit of index.
 	 */
-	public static boolean checkRightOrBottomNode(int index, int length) {
+	public static boolean isRightOrBottomStateValid(int index, int length) {
 		return index + 1 <= length - 1;
 	}
 
@@ -369,10 +368,10 @@ public class A1main {
 		goalFrontier.addLast(goalNode);
 
 		while (!startFrontier.isEmpty() && !goalFrontier.isEmpty()) {
-			if (checkGettingIntersectNode("startFrontier", startFrontier, startExplored, goalExplored, Directions.Start, problem, goal, alg)) {
+			if (isIntersectNode("startFrontier", startFrontier, startExplored, goalExplored, Directions.Start, problem, goal, alg)) {
 				return;
 			}
-			if (checkGettingIntersectNode("goalFrontier", goalFrontier, goalExplored, startExplored, Directions.Goal, problem, initialState, alg)) {
+			if (isIntersectNode("goalFrontier", goalFrontier, goalExplored, startExplored, Directions.Goal, problem, initialState, alg)) {
 				return;
 			}
 		}
@@ -385,7 +384,7 @@ public class A1main {
 	/**
 	 * Output result if the search succeeds.
 	 */
-	public static boolean checkGettingIntersectNode(String outputText, Deque<Node> frontier, Deque<Node> explored, Deque<Node> targetExplored, Directions dir, Map problem, Coord state, Algorithms alg) {
+	public static boolean isIntersectNode(String outputText, Deque<Node> frontier, Deque<Node> explored, Deque<Node> targetExplored, Directions dir, Map problem, Coord state, Algorithms alg) {
 		System.out.print(outputText+"\n");
 		outputFrontier(frontier, false);
 		Node n = frontier.removeFirst();
@@ -428,7 +427,7 @@ public class A1main {
 		for (int i = 0; i < successor.getNextStates().size(); i++) {
 			Node nd = new Node(node, successor.getNextStates().get(i), null, alg, successor.getPriorities().get(i));
 			// Check if the state is not contained in a node of frontier or explored
-			if (!getNodeExistence(nd.getState(), frontier, explored)) {
+			if (!isNodeExist(nd.getState(), frontier, explored)) {
 				successors.add(nd);
 			}
 		}
