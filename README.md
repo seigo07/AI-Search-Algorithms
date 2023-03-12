@@ -1,10 +1,8 @@
-# CS5011 Assignment 1
+## Description
 
 AI search algorithms for the marine navigation planning problem.
 
-## Description
-
-Informed and uninformed search algorithms: depth-first search (DFS), breadth-first search (BFS), best-first search (BestF), A*(AStar) search and bidirectional search for the marine navigation planning problem.
+Informed and uninformed search algorithms: depth-first search (DFS), breadth-first search (BFS), best-first search (BestF), A*(AStar) search and bidirectional search.
 
 The output is as follows.
 
