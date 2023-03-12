@@ -20,7 +20,7 @@ The output is as follows.
 
 * Java Version: openjdk 19.0.1
 
-### Executing program
+### Running program
 
 * Please run the following command
 ```
