@@ -1,3 +1,7 @@
+# Project
+
+AI search algorithms
+
 ## Description
 
 AI search algorithms for the marine navigation planning problem.
