@@ -24,7 +24,7 @@ The output is as follows.
 
 * Please run the following command
 ```
-cd A1/src
+cd AISearchAlgorithm/src
 javac *.java
-java A1main <DFS|BFS|AStar|BestF|Bidirectional|> <ConfID>
+java Main <DFS|BFS|AStar|BestF|Bidirectional|> <ConfID>
 ```

@@ -8,12 +8,12 @@ import java.util.*;
  * @author at258
  * 
  * run with 
- * java A1main <Algo> <ConfID>
+ * java Main <Algo> <ConfID>
  * 
  */
 
 
-public class A1main {
+public class Main {
 
 	public static void main(String[] args) {
 
